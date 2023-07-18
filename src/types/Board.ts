@@ -30,6 +30,17 @@ export class Board {
         this.subscribe = subscribe;
         this.setBoard = set;
         this.updateBoard = update;
+
+    }
+
+    public regenerate(size: number, mines: number) {
+        this.size = size;
+        this.mines = mines;
+        this.flags = 0;
+        this.cells = this.generateBoard();
+        this.generateMines();
+        this.assignValues();
+        this.updateBoard(() => this);
     }
 
     public expand(x: number, y: number) {
