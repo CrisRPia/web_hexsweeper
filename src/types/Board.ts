@@ -14,7 +14,7 @@ export class Board {
     cells: Array<Array<LogicCell>>;
     size: number;
     mines: number;
-    flags: number = 0
+    flags: number = 0;
     subscribe;
     setBoard;
     updateBoard;

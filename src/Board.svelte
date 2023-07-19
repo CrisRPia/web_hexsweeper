@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { fade } from 'svelte/transition';
 	import Cell from './Cell.svelte';
 	import { main_board } from './main_board';
 	import { Board } from './types/Board';
@@ -8,9 +9,9 @@
 	let scaling = 100;
 
 	$: {
-        mines = Math.floor(size * size * 0.1);
-        main_board.set(new Board(size, mines));
-    }
+		mines = Math.floor(size * size * 0.1);
+		main_board.set(new Board(size, mines));
+	}
 	let board: Board = $main_board;
 	main_board.subscribe((val: Board) => {
 		board = val;
@@ -58,15 +59,14 @@
 <div
 	id="wrap"
 	on:wheel|preventDefault={handleScroll}
-    class="overflow-hidden flex items-center justify-center -z-1"
-    style="width: 100vw; height: 100vh; left: 0px; position:absolute"
+	class="overflow-hidden flex items-center justify-center -z-1"
+	style="width: 100vw; height: 100vh; left: 0px; position:absolute"
 	on:mousedown|capture={mouseDown}
 	on:mouseup={mouseUp}
-    on:mouseleave={mouseUp}
+	on:mouseleave={mouseUp}
 	on:mousemove|capture={mouseDrag}
 >
-	<div id="mover"
-    style="transform: translate({tx}px, {ty}px);">
+	<div id="mover" style="transform: translate({tx}px, {ty}px);">
 		<div
 			id="c"
 			class="relative whitespace-nowrap transition-transform w-fit h-fit"
@@ -82,9 +82,13 @@
                         vertical-align: top;
                         transform: translateX({x % 2 == 0 ? (-50 / board.size).toString() : '0'}%);
                     "
-                >
+				>
 					{#each row as _, y}
-						<Cell {x} {y} width={40} />
+						{#if x < size && y < size}
+							<div in:fade class="inline-block">
+								<Cell {x} {y} width={40} />
+							</div>
+						{/if}
 					{/each}
 				</div>
 			{/each}
@@ -103,4 +107,3 @@
 		transform: translateY(-50%);
 	}
 </style>
-

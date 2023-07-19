@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade, fly } from 'svelte/transition';
 	import { Modal, modalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings } from '@skeletonlabs/skeleton';
 	import type { ModalComponent } from '@skeletonlabs/skeleton';
@@ -45,6 +46,19 @@
         ?
     </button>
 </div>
+{#if $board.flags == $board.mines}
+	<div transition:fade={{duration: 500}} class="left-0 right-0 bottom-1/4 w-fit mx-auto select-none justify-center z-20 fixed ">
+		<div class="card p-2 z-20">
+            <h1 class="h1 text-center mt-3 mb-5">¡Victoria!</h1>
+			<button class="m-1 btn variant-filled-primary rounded mt-1 w-fit" on:click={() => $board.regenerate($board.size, $board.mines)}>
+				Regenerar tablero
+			</button>
+			<button class="m-1 btn variant-filled-tertiary rounded mt-1 w-fit" on:click={() => modalStore.trigger(modal)}>
+				Configurar tablero
+			</button>
+		</div>
+	</div>
+{/if}
 
 <Board size={$board.size} />
 

@@ -9,12 +9,19 @@
 	export let x: number;
 	export let y: number;
 	let board = $main_board;
-	board.subscribe((_: Board) => {
+	board.subscribe((b: Board) => {
+		board = b;
+		if (b.size <= x || b.size <= y) {
+			logic = logic;
+			return;
+		}
 		logic = board.cells[x][y];
 	});
 
 	function handleClick(e: MouseEvent) {
-        if (e.shiftKey) { return; }
+		if (e.shiftKey) {
+			return;
+		}
 		clickCount++;
 		discover();
 	}
@@ -26,7 +33,9 @@
 	}
 
 	function flag(e: MouseEvent) {
-        if (e.shiftKey) { return; }
+		if (e.shiftKey) {
+			return;
+		}
 		e.preventDefault();
 		board.flag(x, y);
 	}
@@ -38,7 +47,7 @@
 			id="c"
 			tabindex="-1"
 			role="button"
-            on:dblclick={() => board.expand(x, y)}
+			on:dblclick={() => board.expand(x, y)}
 			on:click={handleClick}
 			on:contextmenu={flag}
 			on:mouseover={() => board.hoverIn(x, y)}
@@ -59,19 +68,18 @@
             inline-block
             transition-colors
             select-none
-            hover:brightness-200
-            {logic.highlighted ? 'brightness-125' : ''}
+            {logic.highlighted ? 'brightness-150' : ''}
             "
 		>
-			<p
-				class="
-                    text-white
-                    {logic.discovered && !logic.mined && logic.value != 0 ? 'opacity-100' : 'opacity-0'}
+			{#if logic.discovered && !logic.mined && logic.value != 0}
+				<p
+					class="
                     {logic.forbidden ? 'blur' : ''}
-            "
-			>
-				{logic.value}
-			</p>
+                    "
+				>
+					{logic.value}
+				</p>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -126,4 +134,3 @@
 		margin: calc(var(--base_margin) + 1px) 0 0 calc(var(--width) * 0.05);
 	}
 </style>
-
