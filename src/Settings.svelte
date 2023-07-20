@@ -4,6 +4,9 @@
 	import RegenerateButton from './RegenerateButton.svelte';
 	let difficulty = $board.mines / ($board.size * $board.size) || 0.15;
 	let size = $board.size;
+	let orthogonal = $board.orthogonalAdjacency;
+	let diagonal = $board.diagonalAdjacency;
+	let unknown = $board.initialUnknowns != 0;
 </script>
 
 <div
@@ -21,10 +24,10 @@
 			<h3 class="h3">Tablero</h3>
 			<div class="flex justify-between">
 				<select bind:value={size} class="select variant-glass- mr-1">
-					<option value={10}> Pequeño (10) </option>
-					<option value={20}> Mediano (20) </option>
-					<option value={30}> Grande (30) </option>
-					<option value={40}> Enorme (40) </option>
+					<option value={10}> Pequeño </option>
+					<option value={20}> Mediano </option>
+					<option value={30}> Grande </option>
+					<option value={40}> Enorme </option>
 				</select>
 				<select bind:value={difficulty} class="select ml-1">
 					<option value={0.1}> Fácil </option>
@@ -37,9 +40,11 @@
 			<Accordion>
 				<AccordionItem>
 					<svelte:fragment slot="lead">
-						<SlideToggle disabled active="bg-success-500" checked name="slider-laber"
-							>Adyacencia diagonal</SlideToggle
-						>
+						<div on:click|stopPropagation>
+							<SlideToggle active="bg-success-500" bind:checked={diagonal} name="slider-diagonal"
+								>Adyacencia diagonal</SlideToggle
+							>
+						</div>
 					</svelte:fragment>
 					<svelte:fragment slot="summary">
 						<p />
@@ -52,9 +57,13 @@
 				</AccordionItem>
 				<AccordionItem>
 					<svelte:fragment slot="lead">
-						<SlideToggle disabled active="bg-success-500" checked name="slider-laber"
-							>Adyacencia ortogonal</SlideToggle
-						>
+						<div on:click|stopPropagation>
+							<SlideToggle
+								active="bg-success-500"
+								bind:checked={orthogonal}
+								name="slider-orthogonal">Adyacencia ortogonal</SlideToggle
+							>
+						</div>
 					</svelte:fragment>
 					<svelte:fragment slot="summary">
 						<p />
@@ -67,23 +76,27 @@
 				</AccordionItem>
 				<AccordionItem>
 					<svelte:fragment slot="lead">
-						<SlideToggle disabled active="bg-success-500" name="slider-laber"
-							>Generar incógnitas</SlideToggle
-						>
+						<div on:click|stopPropagation>
+							<SlideToggle bind:checked={unknown} active="bg-success-500" name="slider-unknown"
+								>Generar incógnitas</SlideToggle
+							>
+						</div>
 					</svelte:fragment>
 					<svelte:fragment slot="summary">
 						<p />
 					</svelte:fragment>
 					<svelte:fragment slot="content">
-						Generar algunas celdas carentes de información. La frecuencia de las mismas depende de
-						la dificultad.
+						Generar algunas celdas sin minas carentes de información. La frecuencia de las mismas
+						depende de la dificultad.
 					</svelte:fragment>
 				</AccordionItem>
 				<AccordionItem>
 					<svelte:fragment slot="lead">
-						<SlideToggle disabled active="bg-success-500" name="slider-laber"
-							>Garantizar tablero ganable</SlideToggle
-						>
+						<div on:click|stopPropagation>
+							<SlideToggle disabled active="bg-success-500" name="slider-winnable"
+								>Garantizar tablero ganable</SlideToggle
+							>
+						</div>
 					</svelte:fragment>
 					<svelte:fragment slot="summary">
 						<p />
@@ -96,9 +109,11 @@
 				</AccordionItem>
 				<AccordionItem>
 					<svelte:fragment slot="lead">
-						<SlideToggle disabled active="bg-success-500" checked name="slider-laber"
-							>Penalizar mala expansión</SlideToggle
-						>
+						<div on:click|stopPropagation>
+							<SlideToggle disabled active="bg-success-500" checked name="slider-penalize"
+								>Penalizar mala expansión</SlideToggle
+							>
+						</div>
 					</svelte:fragment>
 					<svelte:fragment slot="summary">
 						<p />
@@ -111,7 +126,14 @@
 			</Accordion>
 		</label>
 	</div>
-    <RegenerateButton {size} mines={size * size * difficulty} cls="btn variant-filled-error rounded mt-1 w-full"/>
+	<RegenerateButton
+		{orthogonal}
+		{diagonal}
+		{size}
+		mines={size * size * difficulty}
+		unknowns={unknown ? size * size * difficulty : 0}
+		cls="btn variant-filled-error rounded mt-1 w-full"
+	/>
 
 	<div class="card-footer mt-10">
 		<p class="">Desarrollado por Cristian Rodríguez.</p>
