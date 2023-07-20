@@ -1,22 +1,21 @@
 <script lang="ts">
-	import { LogicCell } from './types/LogicCell';
+	import type { LogicCell } from './types/LogicCell';
 	import { main_board } from './main_board';
 	import type { Board } from './types/Board';
 
 	export let width = 30;
-	let logic = new LogicCell();
+	let logic: LogicCell;
 	let clickCount = 0;
 	export let x: number;
 	export let y: number;
-	let board = $main_board;
-	board.subscribe((b: Board) => {
-		board = b;
-		if (b.size <= x || b.size <= y) {
-			logic = logic;
-			return;
-		}
-		logic = board.cells[x][y];
+    let board = $main_board;
+	main_board.subscribe((b: Board) => {
+        board = $main_board;
 	});
+
+    board.subscribe(() => {
+            logic = board.cells[x][y];
+    });
 
 	function handleClick(e: MouseEvent) {
 		if (e.shiftKey) {
@@ -33,9 +32,6 @@
 	}
 
 	function flag(e: MouseEvent) {
-		if (e.shiftKey) {
-			return;
-		}
 		e.preventDefault();
 		board.flag(x, y);
 	}
@@ -68,6 +64,7 @@
             inline-block
             transition-colors
             select-none
+            hover:brightness-200
             {logic.highlighted ? 'brightness-150' : ''}
             "
 		>

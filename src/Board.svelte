@@ -2,16 +2,12 @@
     import { fade } from 'svelte/transition';
 	import Cell from './Cell.svelte';
 	import { main_board } from './main_board';
-	import { Board } from './types/Board';
+	import type { Board } from './types/Board';
 
 	export let size = 5;
 	let mines = Math.floor(size * size * 0.2);
 	let scaling = 100;
 
-	$: {
-		mines = Math.floor(size * size * 0.1);
-		main_board.set(new Board(size, mines));
-	}
 	let board: Board = $main_board;
 	main_board.subscribe((val: Board) => {
 		board = val;
