@@ -23,8 +23,6 @@ export class Board {
     constructor(size: number, mines: number) {
         this.size = size;
         this.mines = mines;
-        console.log(this.mines);
-        console.log("here");
         this.cells = this.generateBoard();
         this.generateMines();
         this.assignValues();
