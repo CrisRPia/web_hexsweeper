@@ -4,14 +4,11 @@
 	import { main_board } from './main_board';
 	import type { Board } from './types/Board';
 
-	export let size = 5;
-	let mines = Math.floor(size * size * 0.2);
 	let scaling = 100;
 
-	let board: Board = $main_board;
-	main_board.subscribe((val: Board) => {
-		board = val;
-	});
+	export let board: Board;
+    export let moveable = true;
+    export let width = 40;
 
 	function handleScroll(e: WheelEvent) {
 		let change = e.deltaY * -0.1 * Math.log2(scaling);
@@ -53,14 +50,14 @@
 </script>
 
 <div
-	id="wrap"
-	on:wheel|preventDefault={handleScroll}
-	class="overflow-hidden flex items-center justify-center -z-1"
-	style="width: 100vw; height: 100vh; left: 0px; position:absolute"
-	on:mousedown|capture={mouseDown}
-	on:mouseup={mouseUp}
-	on:mouseleave={mouseUp}
-	on:mousemove|capture={mouseDrag}
+    id={moveable ? "wrap" : undefined }
+    on:wheel={moveable ? handleScroll : undefined}
+    class={moveable ? "overflow-hidden flex items-center justify-center -z-1" : "pl-5 pt-7 -mb-3 w-fit"}
+    style={moveable ? "width: 100vw; height: 100vh; left: 0px; position:absolute" : undefined}
+    on:mousedown|capture={moveable ? mouseDown : undefined}
+    on:mouseup={moveable ? mouseUp : undefined}
+    on:mouseleave={moveable ? mouseUp : undefined}
+    on:mousemove|capture={moveable ? mouseDrag : undefined}
 >
 	<div id="mover" style="transform: translate({tx}px, {ty}px);">
 		<div
@@ -80,9 +77,9 @@
                     "
 				>
 					{#each row as _, y}
-						{#if x < size && y < size}
+						{#if x < board.size && y < board.size }
 							<div in:fade class="inline-block">
-								<Cell {x} {y} width={40} />
+								<Cell {x} {y} width={width} board={board}/>
 							</div>
 						{/if}
 					{/each}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { LogicCell } from './types/LogicCell';
-	import { main_board } from './main_board';
 	import type { Board } from './types/Board';
 
 	export let width = 30;
@@ -8,10 +7,7 @@
 	let clickCount = 0;
 	export let x: number;
 	export let y: number;
-    let board = $main_board;
-	main_board.subscribe((b: Board) => {
-        board = $main_board;
-	});
+    export let board: Board;
 
     board.subscribe(() => {
             logic = board.cells[x][y];
@@ -54,18 +50,19 @@
             {logic.forbidden
 				? 'bg-opacity-0'
 				: logic.flagged
-				? 'bg-success-500'
+				? 'bg-success-400 dark:bg-success-500'
 				: logic.mined && logic.discovered
-				? 'bg-error-500'
+				? 'bg-warning-500 dark:bg-error-500'
 				: logic.discovered
-				? 'bg-tertiary-400 bg-opacity-20'
-				: 'bg-tertiary-400 bg-opacity-50'}
+				? 'bg-tertiary-400 bg-opacity-30'
+				: 'bg-tertiary-400 bg-opacity-100'}
             w-8
             inline-block
             transition-colors
             select-none
-            hover:brightness-200
-            {logic.highlighted ? 'brightness-150' : ''}
+            hover:brightness-110
+            hover:dark:brightness-105
+            {logic.highlighted ? 'brightness-110 dark:brightness-150' : ''}
             "
 		>
 			{#if logic.discovered && !logic.mined && logic.value != 0}

@@ -1,4 +1,3 @@
-import { main_board } from "../main_board";
 import { LogicCell } from "./LogicCell";
 import { writable } from "svelte/store";
 
@@ -19,20 +18,32 @@ export class Board {
     diagonalAdjacency: boolean;
     initialUnknowns: number;
     correctFlags: number = 0;
+    punish: boolean;
     subscribe;
     setBoard;
     updateBoard;
 
-    constructor(size: number, mines: number, adjacent: boolean, diagonal: boolean, unknowns: number) {
+    constructor(
+        size: number,
+        mines: number,
+        adjacent: boolean = true,
+        diagonal: boolean = true,
+        unknowns: number = 0,
+        punish: boolean = true,
+        autogenerate: boolean = true
+    ) {
         this.orthogonalAdjacency = adjacent;
         this.diagonalAdjacency = diagonal;
         this.initialUnknowns = unknowns;
+        this.punish = punish;
         this.size = size;
         this.mines = mines;
         this.cells = this.generateBoard();
-        this.generateMines();
-        this.assignValues();
-        this.generateUnknowns();
+        if (autogenerate) {
+            this.generateMines();
+            this.assignValues();
+            this.generateUnknowns();
+        }
 
         const { subscribe, set, update } = writable(this);
         this.subscribe = subscribe;
@@ -74,7 +85,7 @@ export class Board {
                 }
                 this.discover_animate(n[0], n[1]);
             });
-        } else {
+        } else if (this.punish) {
             cell.forbidden = true;
         }
         this.updateBoard(() => this);

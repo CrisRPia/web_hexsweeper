@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="899.791" cy="255.348" r="250" id="gradient-1" spreadMethod="reflect" gradientTransform="matrix(0.946, 0, 0, 0.946, -601.20211, 8.440557)">
+      <stop offset="0" style="stop-color: rgb(43, 48, 96);"/>
+      <stop offset="1" style="stop-color: rgb(92, 38, 85);"/>
+    </radialGradient>
+    <filter id="drop-shadow-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 10 10 0 0.5 rgba(0,0,0,0.3)">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0"/>
+      <feOffset dx="10" dy="10"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="1"/>
+      </feComponentTransfer>
+      <feFlood flood-color="rgba(0,0,0,0.3)"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="inner-shadow-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="inner-shadow 1 3 3 0 0.19 rgba(0,0,0,0.7)">
+      <feOffset dx="3" dy="3"/>
+      <feGaussianBlur stdDeviation="0"/>
+      <feComposite operator="out" in="SourceGraphic"/>
+      <feComponentTransfer result="choke">
+        <feFuncA type="linear" slope="0.38"/>
+      </feComponentTransfer>
+      <feFlood flood-color="rgba(0,0,0,0.7)" result="color"/>
+      <feComposite operator="in" in="color" in2="choke" result="shadow"/>
+      <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <path d="M 190.875 29.267 C 230.292 8.245 269.708 8.245 309.125 29.267 L 427.375 92.334 C 466.792 113.356 486.5 144.889 486.5 186.934 L 486.5 313.067 C 486.5 355.111 466.792 386.644 427.375 407.666 L 309.125 470.733 C 269.708 491.755 230.292 491.755 190.875 470.733 L 72.625 407.666 C 33.208 386.644 13.5 355.111 13.5 313.067 L 13.5 186.934 C 13.5 144.889 33.208 113.356 72.625 92.334 L 190.875 29.267 Z" style="stroke: rgb(0, 0, 0); fill: url(#gradient-1); paint-order: fill; stroke-width: 0px; filter: url(#drop-shadow-filter-0); transform-origin: 250px 250px;"/>
+  <path d="M 153.508 151.616 L 153.508 198.916 L 200.808 222.566 L 248.108 198.916 L 248.108 151.616 L 200.808 127.966 L 153.508 151.616 Z M 202.7 226.35 L 202.7 273.65 L 250 297.3 L 297.3 273.65 L 297.3 226.35 L 250 202.7 L 202.7 226.35 Z M 251.892 151.616 L 251.892 198.916 L 299.192 222.566 L 346.492 198.916 L 346.492 151.616 L 299.192 127.966 L 251.892 151.616 Z M 153.508 301.084 L 153.508 348.384 L 200.808 372.034 L 248.108 348.384 L 248.108 301.084 L 200.808 277.434 L 153.508 301.084 Z M 251.892 301.084 L 251.892 348.384 L 299.192 372.034 L 346.492 348.384 L 346.492 301.084 L 299.192 277.434 L 251.892 301.084 Z M 104.316 226.35 L 104.316 273.65 L 151.616 297.3 L 198.916 273.65 L 198.916 226.35 L 151.616 202.7 L 104.316 226.35 Z M 301.084 226.35 L 301.084 273.65 L 348.384 297.3 L 395.684 273.65 L 395.684 226.35 L 348.384 202.7 L 301.084 226.35 Z M 202.7 76.882 L 202.7 124.182 L 250 147.832 L 297.3 124.182 L 297.3 76.882 L 250 53.232 L 202.7 76.882 Z M 202.7 375.818 L 202.7 423.118 L 250 446.768 L 297.3 423.118 L 297.3 375.818 L 250 352.168 L 202.7 375.818 Z M 350.276 151.613 L 350.276 198.913 L 397.576 222.563 L 444.876 198.913 L 444.876 151.613 L 397.576 127.963 L 350.276 151.613 Z M 55.124 151.616 L 55.124 198.916 L 102.424 222.566 L 149.724 198.916 L 149.724 151.616 L 102.424 127.966 L 55.124 151.616 Z M 55.124 301.084 L 55.124 348.384 L 102.424 372.034 L 149.724 348.384 L 149.724 301.084 L 102.424 277.434 L 55.124 301.084 Z M 350.276 301.084 L 350.276 348.384 L 397.576 372.034 L 444.876 348.384 L 444.876 301.084 L 397.576 277.434 L 350.276 301.084 Z" style="stroke: rgb(0, 0, 0); paint-order: stroke; stroke-width: 0px; filter: url(#inner-shadow-filter-0); fill: rgb(61, 118, 155); transform-origin: 250px 250px;"/>
+</svg>

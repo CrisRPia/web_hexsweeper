@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
-	import { Modal, ProgressBar, ProgressRadial, modalStore } from '@skeletonlabs/skeleton';
+	import { Modal, ProgressBar, modalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings } from '@skeletonlabs/skeleton';
 	import type { ModalComponent } from '@skeletonlabs/skeleton';
 	import Settings from './Settings.svelte';
@@ -8,33 +8,37 @@
 	import { main_board } from './main_board';
 	import { Board as LogicBoard } from './types/Board';
 	import RegenerateButton from './RegenerateButton.svelte';
+    import Controls from './Controls.svelte';
 	let board: LogicBoard;
 	main_board.subscribe(() => {
 		board = $main_board;
 	});
 	main_board.set(new LogicBoard(10, 10, true, true, 0));
 
-	const modalComponent: ModalComponent = {
+	const settingsComponent: ModalComponent = {
 		// Pass a reference to your custom component
 		ref: Settings
 	};
-	const modal: ModalSettings = {
+	const controlsComponent: ModalComponent = {
+		// Pass a reference to your custom component
+		ref: Controls
+	};
+	const settingsModal: ModalSettings = {
 		type: 'component',
 		// Pass the component directly:
-		component: modalComponent
+		component: settingsComponent
+	};
+	const controlsModal: ModalSettings = {
+		type: 'component',
+		// Pass the component directly:
+		component: controlsComponent
 	};
 </script>
 
-<button
-	on:click={() => modalStore.trigger(modal)}
-	class="
-            btn
-            variant-glass
-            fixed right-0 m-2 z-10
-            "
->
-	?
-</button>
+<div class="btn-group-vertical variant-glass rounded fixed right-0 m-2 z-10">
+<button on:click={() => modalStore.trigger(settingsModal)}> Opciones </button>
+<button on:click={() => modalStore.trigger(controlsModal)}> Cómo jugar </button>
+</div>
 
 {#if board.size == 0}
 	<div class="w-1/2 left-1/4 top-10 z-50 fixed my-auto">
@@ -42,7 +46,7 @@
 	</div>
 {:else}
 	<div transition:fade>
-		<Board size={$board.size} />
+		<Board board={$main_board}/>
 	</div>
 	<div in:fly={{ y: -10 }} out:fly={{ y: -10 }} class="flex justify-between">
 		<div
@@ -71,7 +75,7 @@
 				/>
 				<button
 					class="m-1 btn variant-filled-tertiary rounded mt-1 w-fit"
-					on:click={() => modalStore.trigger(modal)}
+					on:click={() => modalStore.trigger(settingsModal)}
 				>
 					Configurar tablero
 				</button>

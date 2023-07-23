@@ -1,12 +1,38 @@
 <script lang="ts">
 	import { Accordion, AccordionItem, LightSwitch, SlideToggle } from '@skeletonlabs/skeleton';
 	import { main_board as board } from './main_board';
+	import { Board as LogicBoard } from './types/Board';
 	import RegenerateButton from './RegenerateButton.svelte';
+	import type { Writable } from 'svelte/store';
+	import Board from './Board.svelte';
+	import { writable } from 'svelte/store';
+	import { tick } from 'svelte';
 	let difficulty = $board.mines / ($board.size * $board.size) || 0.15;
 	let size = $board.size;
 	let orthogonal = $board.orthogonalAdjacency;
 	let diagonal = $board.diagonalAdjacency;
 	let unknown = $board.initialUnknowns != 0;
+    let punish = $board.punish;
+
+	let sampleBoard = writable(new LogicBoard(5, 25 * difficulty, orthogonal, diagonal, 0));
+	$: {
+		async function updateSample() {
+			let uk = unknown ? 25 * difficulty : 0;
+			sampleBoard.set(new LogicBoard(0, 0));
+			await tick();
+			sampleBoard.set(
+                new LogicBoard(
+                5, // size
+                25 * difficulty, // mines
+                orthogonal,
+                diagonal, 
+                uk,
+                punish,
+                ));
+		};
+
+        updateSample();
+	}
 </script>
 
 <div
@@ -38,9 +64,9 @@
 			</div>
 			<h3 class="h3">Mecánicas (WIP)</h3>
 			<Accordion>
-				<AccordionItem>
+				<AccordionItem class={!diagonal && !orthogonal ? 'variant-ghost-warning' : ''}>
 					<svelte:fragment slot="lead">
-						<div on:click|stopPropagation>
+						<div on:click|stopPropagation >
 							<SlideToggle active="bg-success-500" bind:checked={diagonal} name="slider-diagonal"
 								>Adyacencia diagonal</SlideToggle
 							>
@@ -51,11 +77,11 @@
 					</svelte:fragment>
 					<svelte:fragment slot="content">
 						Los valores de las celdas y las expansiones considerarán las celdas que comparten
-						<span class="variant-ghost-warning rounded">vértices</span>
+						<span class="variant-ghost-secondary rounded">vértices</span>
 						como vecinas.
 					</svelte:fragment>
 				</AccordionItem>
-				<AccordionItem>
+				<AccordionItem class={!diagonal && !orthogonal ? 'variant-ghost-warning' : ''}>
 					<svelte:fragment slot="lead">
 						<div on:click|stopPropagation>
 							<SlideToggle
@@ -70,7 +96,7 @@
 					</svelte:fragment>
 					<svelte:fragment slot="content">
 						Los valores de las celdas y las expansiones considerarán las celdas que comparten
-						<span class="variant-ghost-warning rounded">lados</span>
+						<span class="variant-ghost-secondary rounded">lados</span>
 						como vecinas.
 					</svelte:fragment>
 				</AccordionItem>
@@ -110,7 +136,7 @@
 				<AccordionItem>
 					<svelte:fragment slot="lead">
 						<div on:click|stopPropagation>
-							<SlideToggle disabled active="bg-success-500" checked name="slider-penalize"
+							<SlideToggle bind:checked={punish} active="bg-success-500" name="slider-penalize"
 								>Penalizar mala expansión</SlideToggle
 							>
 						</div>
@@ -126,10 +152,15 @@
 			</Accordion>
 		</label>
 	</div>
+	<h3 class="h3">Previsualización</h3>
+	<div class="h-fit w-fit mx-auto">
+		<Board board={$sampleBoard} moveable={false} />
+	</div>
 	<RegenerateButton
 		{orthogonal}
 		{diagonal}
 		{size}
+        {punish}
 		mines={size * size * difficulty}
 		unknowns={unknown ? size * size * difficulty : 0}
 		cls="btn variant-filled-error rounded mt-1 w-full"
