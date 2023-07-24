@@ -6,7 +6,6 @@
 	import type { PanzoomObject } from '@panzoom/panzoom';
 
 	let wrapper: HTMLDivElement;
-	let mover: HTMLDivElement;
 
 	export let board: Board;
 	export let moveable = true;
@@ -17,23 +16,26 @@
 
 	// This function is called when the div is mounted in the DOM
 	function initPanzoom(node: HTMLElement) {
-        if (!moveable) {
-            return;
-        }
+		if (!moveable) {
+			return;
+		}
 		panzoomElement = node;
 		panzoom = Panzoom(panzoomElement, {
+			handleStartEvent: (event) => {
+			},
 			maxScale: 5,
 			minScale: 0.5,
 			animate: true,
 			roundPixels: false
 		});
+
 		setTimeout(() =>
 			panzoom.pan(
 				(wrapper.clientWidth - node.clientWidth) / 2,
-				(wrapper.clientHeight - node.clientHeight)  / 2,
-                {
-                    animate: false
-                }
+				(wrapper.clientHeight - node.clientHeight) / 2,
+				{
+					animate: false
+				}
 			)
 		);
 	}

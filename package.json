@@ -41,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@panzoom/panzoom": "^4.5.1"
+		"@panzoom/panzoom": "^4.5.1",
+		"panzoom": "^9.4.3"
 	}
 }

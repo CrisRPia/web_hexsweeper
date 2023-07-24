@@ -4,22 +4,24 @@
 
 	export let width = 30;
 	let logic: LogicCell;
-	let clickCount = 0;
+    let dragging: boolean = false;
+    let xMemory = 0;
+    let yMemory = 0;
 	export let x: number;
 	export let y: number;
-    export let board: Board;
+	export let board: Board;
 
-    board.subscribe(() => {
-            logic = board.cells[x][y];
-    });
+	board.subscribe(() => {
+		logic = board.cells[x][y];
+	});
 
 	function handleClick(e: MouseEvent) {
-		if (e.shiftKey) {
-			return;
-		}
-		clickCount++;
-		discover();
 	}
+
+
+    function handleMove(e: MouseEvent) {
+        dragging = e.buttons != 0;
+    }
 
 	function discover() {
 		if (!logic.flagged) {
@@ -31,17 +33,38 @@
 		e.preventDefault();
 		board.flag(x, y);
 	}
+
+    function handleDown(e: MouseEvent) {
+        yMemory = e.y;
+        xMemory = e.x;
+    }
+    function handleUp(e: MouseEvent) {
+        if (yMemory === e.y && xMemory === e.x) {
+            discover();
+        }
+    }
+    function handleKey(e: KeyboardEvent) {
+        if (e.key === "Enter") {
+            discover();
+        }
+    }
 </script>
 
 <div class="hexagon hexagon2 inline-block" style="--width: {width}px">
 	<div class="hexagon-in1">
 		<div
 			id="c"
-			tabindex="-1"
+			tabindex={x * 10 + y + 20}
 			role="button"
+            on:mousedown={handleDown}
+            on:mouseup={handleUp}
+			on:mousemove={handleMove}
 			on:dblclick={() => board.expand(x, y)}
+            on:keypress={handleKey}
 			on:click={handleClick}
 			on:contextmenu={flag}
+            on:focus|preventDefault={() => board.hoverIn(x, y)}
+            on:blur|preventDefault={() => board.hoverOut(x, y)}
 			on:mouseover={() => board.hoverIn(x, y)}
 			on:mouseout={() => board.hoverOut(x, y)}
 			class="
@@ -60,7 +83,9 @@
             inline-block
             transition-colors
             select-none
+            focus:brightness-110
             hover:brightness-110
+            focus:dark:brightness-105
             hover:dark:brightness-105
             {logic.highlighted ? 'brightness-110 dark:brightness-150' : ''}
             "
