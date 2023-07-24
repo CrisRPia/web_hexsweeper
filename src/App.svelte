@@ -13,7 +13,17 @@
 	main_board.subscribe(() => {
 		board = $main_board;
 	});
-	main_board.set(new LogicBoard(10, 10, true, true, 0));
+
+	function sleep(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+	async function starter() {
+		main_board.set(new LogicBoard(0, 0, true, true, 0));
+        // This is done to hide ugly initial rendering of panzoom
+		await sleep(100);
+		main_board.set(new LogicBoard(10, 10, true, true, 0));
+	}
+    starter();
 
 	const settingsComponent: ModalComponent = {
 		// Pass a reference to your custom component

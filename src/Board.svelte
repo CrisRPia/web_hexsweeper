@@ -2,88 +2,56 @@
 	import { fade } from 'svelte/transition';
 	import Cell from './Cell.svelte';
 	import type { Board } from './types/Board';
+	import Panzoom from '@panzoom/panzoom';
+	import type { PanzoomObject } from '@panzoom/panzoom';
 
-	let scaling = 1;
-	let moverDiv: HTMLDivElement;
+	let wrapper: HTMLDivElement;
+	let mover: HTMLDivElement;
 
 	export let board: Board;
 	export let moveable = true;
 	export let width = 40;
 
-	function handleScroll(e: WheelEvent) {
-		let change = (e.deltaY * -0.1 * Math.log2(scaling * 100)) / 100;
-        let changePercent = change / scaling;
-        let coords = moverDiv.getBoundingClientRect();
-        console.log(changePercent);
-        console.log(scaling);
-        tx += tx * changePercent + (-e.x + coords.width / 2 + coords.x) * changePercent;
-        ty += ty * changePercent + (-e.y + coords.width / 2 + coords.y) * changePercent;
-        scale(change);
-        console.log(scaling);
-	}
+	let panzoomElement;
+	let panzoom: PanzoomObject;
 
-	function scale(change: number) {
-		if (change > 0) {
-			if (scaling + change >= 5) {
-				scaling = 5;
-				return;
-			}
-			scaling += change;
-		} else {
-			if (scaling + change <= 0.5) {
-				scaling = 0.5;
-				return;
-			}
-			scaling += change;
-		}
-	}
-	let tx = 0;
-	let ty = 0;
-	let dragging = false;
-
-	function mouseDown(e: MouseEvent) {
-		if (e.shiftKey) {
-			e.preventDefault;
-			dragging = true;
-		}
-	}
-
-	function mouseUp() {
-		dragging = false;
-	}
-
-	function mouseDrag(e: MouseEvent) {
-		if (dragging) {
-			tx += e.movementX;
-			ty += e.movementY;
-		}
+	// This function is called when the div is mounted in the DOM
+	function initPanzoom(node: HTMLElement) {
+        if (!moveable) {
+            return;
+        }
+		panzoomElement = node;
+		panzoom = Panzoom(panzoomElement, {
+			maxScale: 5,
+			minScale: 0.5,
+			animate: true,
+			roundPixels: false
+		});
+		setTimeout(() =>
+			panzoom.pan(
+				(wrapper.clientWidth - node.clientWidth) / 2,
+				(wrapper.clientHeight - node.clientHeight)  / 2,
+                {
+                    animate: false
+                }
+			)
+		);
 	}
 </script>
 
 <div
 	id={moveable ? 'wrap' : undefined}
-	on:wheel={moveable ? handleScroll : undefined}
-	class={moveable
-		? 'overflow-hidden flex items-center justify-center -z-1'
-		: 'pl-5 pt-7 -mb-3 w-fit'}
+	on:wheel={panzoom.zoomWithWheel}
+	bind:this={wrapper}
+	class={moveable ? 'overflow-hidden -z-1' : 'pl-5 pt-7 -mb-3 w-fit'}
 	style={moveable
 		? 'width: 100vw; height: 100vh; left: 0px; position:absolute'
 		: undefined}
-	on:mousedown|capture={moveable ? mouseDown : undefined}
-	on:mouseup={moveable ? mouseUp : undefined}
-	on:mouseleave={moveable ? mouseUp : undefined}
-	on:mousemove|capture={moveable ? mouseDrag : undefined}
 >
-	<div
-		id="mover"
-        class=""
-		style="transform: translate({tx}px, {ty}px);"
-	>
+	<div use:initPanzoom id="mover" class="w-fit h-fit">
 		<div
 			id="c"
-            bind:this={moverDiv}
 			class="relative whitespace-nowrap transition-transform w-fit h-fit"
-			style="transform: scale({scaling});"
 		>
 			{#each board.cells as row, x}
 				<div
