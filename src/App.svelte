@@ -8,7 +8,7 @@
 	import { main_board } from './main_board';
 	import { Board as LogicBoard } from './types/Board';
 	import RegenerateButton from './RegenerateButton.svelte';
-    import Controls from './Controls.svelte';
+	import Controls from './Controls.svelte';
 	let board: LogicBoard;
 	main_board.subscribe(() => {
 		board = $main_board;
@@ -36,8 +36,10 @@
 </script>
 
 <div class="btn-group-vertical variant-glass rounded fixed right-0 m-2 z-10">
-<button on:click={() => modalStore.trigger(settingsModal)}> Opciones </button>
-<button on:click={() => modalStore.trigger(controlsModal)}> Cómo jugar </button>
+	<button on:click={() => modalStore.trigger(settingsModal)}> Opciones </button>
+	<button on:click={() => modalStore.trigger(controlsModal)}>
+		Cómo jugar
+	</button>
 </div>
 
 {#if board.size == 0}
@@ -46,7 +48,7 @@
 	</div>
 {:else}
 	<div transition:fade>
-		<Board board={$main_board}/>
+		<Board board={$main_board} />
 	</div>
 	<div in:fly={{ y: -10 }} out:fly={{ y: -10 }} class="flex justify-between">
 		<div

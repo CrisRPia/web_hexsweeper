@@ -27,12 +27,12 @@
 	let flag = new LogicBoard(1, 1);
 	flag.flag(0, 0);
 	let unknown = new LogicBoard(4, 5);
-    unknown.cells.forEach((row) => {
-        row.forEach((c:LogicCell) => {
-            c.forbidden = !c.mined;
-            c.discovered = c.mined;
-        });
-    });
+	unknown.cells.forEach((row) => {
+		row.forEach((c: LogicCell) => {
+			c.forbidden = !c.mined;
+			c.discovered = c.mined;
+		});
+	});
 </script>
 
 <div
@@ -58,9 +58,13 @@
 					<td>Click derecho</td>
 					<td>Marcar/desmarcar bandera</td>
 				</tr>
-				<tr use:popup={popupHover} class="variant-ghost-warning">
+				<tr>
 					<td>Doble click</td>
-					<td>Expandir celda</td>
+					<td>
+						<span use:popup={popupHover} class="variant-ghost-warning rounded select-none p-1"
+							>Expandir</span
+						> celda</td
+					>
 				</tr>
 				<tr>
 					<td><span class="variant-filled rounded"> ⇧Shift </span> + click</td>
@@ -117,8 +121,8 @@
 				<span>Incógnitas</span>
 				<div class="inline" />
 			</h2>
-			Celdas sin minas ni información. Pueden generarse con el tablero o ser una penalización.
-            Véase que este tablero tiene celdas invisibles: esas son incógnitas.
+			Celdas sin minas ni información. Pueden generarse con el tablero o ser una penalización. Véase
+			que este tablero tiene celdas invisibles: esas son incógnitas.
 		</div>
 		<Board board={unknown} moveable={false} />
 	</div>
@@ -128,7 +132,7 @@
 	<p class="text-sm max-w-prose">
 		Para expandir exitosamente, se debe cumplir una de las siguientes condiciones:
 	</p>
-    <p class="text-sm code"> Minas descubiertas + Celdas sin descubrir + Banderas = Valor de celda </p>
-    <p class="text-sm mt-2 code"> Minas descubiertas + Banderas = Valor de celda </p>
+	<p class="text-sm code">Minas descubiertas + Celdas sin descubrir + Banderas = Valor de celda</p>
+	<p class="text-sm mt-2 code">Minas descubiertas + Banderas = Valor de celda</p>
 	<div class="arrow variant-filled-warning" />
 </div>
