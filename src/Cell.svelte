@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { LogicCell } from './types/LogicCell';
 	import type { Board } from './types/Board';
+    import { flag } from "./settings";
 
 	export let width = 30;
 	let logic: LogicCell;
-    let dragging: boolean = false;
-    let xMemory = 0;
-    let yMemory = 0;
+	let dragging: boolean = false;
+	let xMemory = 0;
+	let yMemory = 0;
 	export let x: number;
 	export let y: number;
 	export let board: Board;
@@ -15,39 +16,43 @@
 		logic = board.cells[x][y];
 	});
 
-	function handleClick(e: MouseEvent) {
+	function handleMove(e: MouseEvent) {
+		dragging = e.buttons != 0;
 	}
 
-
-    function handleMove(e: MouseEvent) {
-        dragging = e.buttons != 0;
-    }
-
 	function discover() {
+		if (logic.discovered) {
+			board.expand(x, y);
+			return;
+		}
 		if (!logic.flagged) {
 			board.discover_animate(x, y);
 		}
 	}
 
-	function flag(e: MouseEvent) {
+	function flagCell(e: MouseEvent) {
 		e.preventDefault();
 		board.flag(x, y);
 	}
 
-    function handleDown(e: MouseEvent) {
-        yMemory = e.y;
-        xMemory = e.x;
-    }
-    function handleUp(e: MouseEvent) {
-        if (yMemory === e.y && xMemory === e.x) {
-            discover();
-        }
-    }
-    function handleKey(e: KeyboardEvent) {
-        if (e.key === "Enter") {
-            discover();
-        }
-    }
+	function handleDown(e: MouseEvent) {
+		yMemory = e.y;
+		xMemory = e.x;
+	}
+	function handleUp(e: MouseEvent) {
+		if (yMemory === e.y && xMemory === e.x && e.button != 2) {
+            if ($flag) {
+                flagCell(e);
+            } else {
+                discover();
+            }
+		}
+	}
+	function handleKey(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			discover();
+		}
+	}
 </script>
 
 <div class="hexagon hexagon2 inline-block" style="--width: {width}px">
@@ -56,15 +61,13 @@
 			id="c"
 			tabindex={x * 10 + y + 20}
 			role="button"
-            on:mousedown={handleDown}
-            on:mouseup={handleUp}
+			on:mousedown={handleDown}
+			on:mouseup={handleUp}
 			on:mousemove={handleMove}
-			on:dblclick={() => board.expand(x, y)}
-            on:keypress={handleKey}
-			on:click={handleClick}
-			on:contextmenu={flag}
-            on:focus|preventDefault={() => board.hoverIn(x, y)}
-            on:blur|preventDefault={() => board.hoverOut(x, y)}
+			on:keypress={handleKey}
+			on:contextmenu={flagCell}
+			on:focus|preventDefault={() => board.hoverIn(x, y)}
+			on:blur|preventDefault={() => board.hoverOut(x, y)}
 			on:mouseover={() => board.hoverIn(x, y)}
 			on:mouseout={() => board.hoverOut(x, y)}
 			class="
@@ -83,9 +86,7 @@
             inline-block
             transition-colors
             select-none
-            focus:brightness-110
             hover:brightness-110
-            focus:dark:brightness-105
             hover:dark:brightness-105
             {logic.highlighted ? 'brightness-110 dark:brightness-150' : ''}
             "
