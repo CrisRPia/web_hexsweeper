@@ -100,18 +100,18 @@
 	{#if $touchscreen}
 		<div
 			transition:fly
-			class="fixed mx-auto rounded-full card bg-slate-500 left-0 right-0 bottom-0 mb-20 flex justify-between h-36 w-fit"
+			class="fixed mx-auto rounded-full card bg-slate-500 left-0 right-0 bottom-0 mb-20 flex justify-between h-12 w-fit"
 		>
 			<div
-				class="absolute m-2 h-32 rounded transition-all -z-50
+				class="absolute m-2 h-8 rounded transition-all -z-50
                     ease-in-out duration-300 opacity-10 bg-white
                     {$flag ? 'rounded-e-full' : 'rounded-s-full'}
                 "
-				style="transform: translateX({$flag ? 8.5 : 0}rem); width: 8.5rem;"
+				style="transform: translateX({$flag ? 4.5 : 0}rem); width: 4.4rem;"
 			/>
 			<button
 				on:click={() => ($flag = false)}
-				class="text-3xlg rounded-s-full rounded-e p-0 mr-0 m-4 w-32"
+				class="text-3xlg rounded-s-full rounded-e p-0 mr-0 m-4 w-16"
 				style="font-size: 3rem;"
 			>
 				<!-- Magnifying glass -->
@@ -133,7 +133,7 @@
 			</button>
 			<button
 				on:click={() => ($flag = true)}
-				class="rounded-e-full rounded-s ml-0 p-0 m-4 w-32"
+				class="rounded-e-full rounded-s ml-0 p-0 m-4 w-16"
 				style="font-size: 3rem;"
 			>
 				<!-- flag -->
