@@ -140,7 +140,6 @@ export class Board {
             this.correctFlags += (cell.flagged ? 1 : -1);
         }
         this.flags = this.flags + (cell.flagged ? 1 : -1);
-        console.log(this.flags);
         this.updateBoard(() => this);
     }
 

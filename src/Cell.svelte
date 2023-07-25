@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LogicCell } from './types/LogicCell';
 	import type { Board } from './types/Board';
-    import { flag } from "./settings";
+	import { flag } from './settings';
 
 	export let width = 30;
 	let logic: LogicCell;
@@ -41,11 +41,11 @@
 	}
 	function handleUp(e: MouseEvent) {
 		if (yMemory === e.y && xMemory === e.x && e.button != 2) {
-            if ($flag) {
-                flagCell(e);
-            } else {
-                discover();
-            }
+			if ($flag) {
+				flagCell(e);
+			} else {
+				discover();
+			}
 		}
 	}
 	function handleKey(e: KeyboardEvent) {

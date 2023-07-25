@@ -6,6 +6,8 @@
 	import type { LogicCell } from './types/LogicCell';
 	import { main_board } from './main_board';
 	import { fly } from 'svelte/transition';
+	import Flag from './Flag.svelte';
+	import MagnifyingGlass from './MagnifyingGlass.svelte';
 	const popupHover: PopupSettings = {
 		event: 'hover',
 		target: 'popupHover',
@@ -72,7 +74,7 @@
 					</tr>
 					<tr>
 						<td>Click derecho</td>
-						<td>Marcar/desmarcar bandera</td>
+						<td>Marcar / desmarcar bandera</td>
 					</tr>
 					<tr>
 						<td>Click + movimiento</td>
@@ -97,12 +99,12 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>🔍</td>
+						<td><div class="h-5 w-fit"><MagnifyingGlass /></div></td>
 						<td>Niebla</td>
 						<td>Descubrir celda</td>
 					</tr>
 					<tr>
-						<td>🔍</td>
+						<td><div class="h-5 w-fit"><MagnifyingGlass /></div></td>
 						<td>Celda con valor</td>
 						<td>
 							<span
@@ -113,9 +115,9 @@
 						>
 					</tr>
 					<tr>
-						<td>🏳</td>
+						<td><div class="h-5 w-fit"><Flag /></div></td>
 						<td>Niebla</td>
-						<td>Descubrir celda</td>
+						<td>Poner / quitar bandera</td>
 					</tr>
 				</tbody>
 			</table>
