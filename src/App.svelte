@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
-    import MagnifyingGlass from './MagnifyingGlass.svelte';
-    import Flag from "./Flag.svelte";
+	import MagnifyingGlass from './MagnifyingGlass.svelte';
+	import Flag from './Flag.svelte';
 	import { Modal, ProgressBar, modalStore } from '@skeletonlabs/skeleton';
-    import ProgressHex from './ProgressHex.svelte';
+	import ProgressHex from './ProgressHex.svelte';
 	import { touchscreen, flag } from './settings';
 	import type { ModalSettings } from '@skeletonlabs/skeleton';
 	import type { ModalComponent } from '@skeletonlabs/skeleton';
@@ -49,7 +49,9 @@
 	};
 </script>
 
-<div class="btn-group-vertical variant-glass rounded fixed right-0 mx-5 my-2 z-10">
+<div
+	class="btn-group-vertical variant-glass rounded fixed right-0 mx-5 my-2 z-10"
+>
 	<button on:click={() => modalStore.trigger(settingsModal)}> Opciones </button>
 	<button on:click={() => modalStore.trigger(controlsModal)}>
 		Cómo jugar
@@ -64,10 +66,14 @@
 	<div transition:fade>
 		<Board board={$board} />
 	</div>
-	<div in:fly={{ y: -10 }} out:fly={{ y: -10 }} class="flex fixed rounded m-5 justify-between z-50">
-        <ProgressHex progress={$board.flags} total={$board.mines} />
+	<div
+		in:fly={{ y: -10 }}
+		out:fly={{ y: -10 }}
+		class="flex fixed rounded m-5 justify-between z-50"
+	>
+		<ProgressHex progress={$board.flags} total={$board.mines} />
 	</div>
-	{#if $board.correctFlags == $board.mines}
+	{#if $board.correctFlags == $board.mines && $board.flags <= $board.mines}
 		<div
 			transition:fade={{ duration: 500 }}
 			class="left-0 right-0 bottom-1/4 w-fit mx-auto select-none justify-center z-20 fixed"
@@ -95,9 +101,9 @@
 		>
 			<div
 				class="absolute m-2 h-8 rounded transition-all -z-50
-                    ease-in-out duration-300 opacity-10 bg-white
-                    {$flag ? 'rounded-e-full' : 'rounded-s-full'}
-                "
+ease-in-out duration-300 opacity-10 bg-white
+{$flag ? 'rounded-e-full' : 'rounded-s-full'}
+"
 				style="transform: translateX({$flag ? 4.5 : 0}rem); width: 4.4rem;"
 			/>
 			<button
@@ -106,7 +112,7 @@
 				style="font-size: 3rem;"
 			>
 				<!-- Magnifying glass -->
-                <MagnifyingGlass />
+				<MagnifyingGlass />
 			</button>
 			<button
 				on:click={() => ($flag = true)}
