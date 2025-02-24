@@ -49,9 +49,7 @@ export class Board {
         this.subscribe = subscribe;
         this.setBoard = set;
         this.updateBoard = update;
-
     }
-
 
     public expand(x: number, y: number) {
         let cell = this.cells[x][y];
@@ -72,8 +70,8 @@ export class Board {
         });
 
         if (
-            fog + flags + knownMines === cell.value
-            || flags + knownMines == cell.value
+            fog + flags + knownMines === cell.value ||
+            flags + knownMines == cell.value
         ) {
             this.getNeighbors(x, y).forEach((n) => {
                 if (flags == correctFlags) {
@@ -137,7 +135,7 @@ export class Board {
         }
         cell.flagged = !cell.flagged;
         if (cell.mined) {
-            this.correctFlags += (cell.flagged ? 1 : -1);
+            this.correctFlags += cell.flagged ? 1 : -1;
         }
         this.flags = this.flags + (cell.flagged ? 1 : -1);
         this.updateBoard(() => this);
@@ -157,19 +155,21 @@ export class Board {
 
         while (currentLevel.length > 0) {
             for (let coords of currentLevel) {
-                cell = this.cells[coords[0]][coords[1]]
+                cell = this.cells[coords[0]][coords[1]];
                 if (cell.forbidden) {
                     continue;
                 }
                 if (cell.value == 0) {
-                    this.getNeighbors(coords[0], coords[1]).forEach((neighbour) => {
-                        let neighbourKey = `${neighbour[0]},${neighbour[1]}`;
-                        let c = this.cells[neighbour[0]][neighbour[1]];
-                        if (!c.discovered && !visited.has(neighbourKey)) {
-                            nextLevel.push(neighbour);
-                            visited.add(neighbourKey);
+                    this.getNeighbors(coords[0], coords[1]).forEach(
+                        (neighbour) => {
+                            let neighbourKey = `${neighbour[0]},${neighbour[1]}`;
+                            let c = this.cells[neighbour[0]][neighbour[1]];
+                            if (!c.discovered && !visited.has(neighbourKey)) {
+                                nextLevel.push(neighbour);
+                                visited.add(neighbourKey);
+                            }
                         }
-                    });
+                    );
                 }
                 if (cell.flagged) {
                     this.flag(coords[0], coords[1]);
@@ -212,39 +212,39 @@ export class Board {
 
         const orthogonal = isEvenRow
             ? [
-                [row - 1, column - 1], // top-left
-                [row - 1, column], // top-right
-                [row, column - 1], // left
-                [row, column + 1], // right
-                [row + 1, column - 1], // bottom-left
-                [row + 1, column], // bottom-right
-            ]
+                  [row - 1, column - 1], // top-left
+                  [row - 1, column], // top-right
+                  [row, column - 1], // left
+                  [row, column + 1], // right
+                  [row + 1, column - 1], // bottom-left
+                  [row + 1, column] // bottom-right
+              ]
             : [
-                [row - 1, column], // top-left
-                [row - 1, column + 1], // top-right
-                [row, column - 1], // left
-                [row, column + 1], // right
-                [row + 1, column], // bottom-left
-                [row + 1, column + 1], // bottom-right
-            ];
+                  [row - 1, column], // top-left
+                  [row - 1, column + 1], // top-right
+                  [row, column - 1], // left
+                  [row, column + 1], // right
+                  [row + 1, column], // bottom-left
+                  [row + 1, column + 1] // bottom-right
+              ];
 
         const diagonal = isEvenRow
             ? [
-                [row - 1, column - 2],// diagonal top-left
-                [row - 2, column],// diagonal top
-                [row - 1, column + 1],// diagonal top-right
-                [row + 1, column - 2],// diagonal bottom-left
-                [row + 2, column],// diagonal bottom
-                [row + 1, column + 1]// diagonal bottom-right
-            ]
+                  [row - 1, column - 2], // diagonal top-left
+                  [row - 2, column], // diagonal top
+                  [row - 1, column + 1], // diagonal top-right
+                  [row + 1, column - 2], // diagonal bottom-left
+                  [row + 2, column], // diagonal bottom
+                  [row + 1, column + 1] // diagonal bottom-right
+              ]
             : [
-                [row - 1, column - 1], // diagonal top-left
-                [row - 2, column], // diagonal top
-                [row - 1, column + 2],// diagonal top-right
-                [row + 1, column - 1],// diagonal bottom-left
-                [row + 2, column], // diagonal bottom
-                [row + 1, column + 2]// diagonal bottom-right
-            ]
+                  [row - 1, column - 1], // diagonal top-left
+                  [row - 2, column], // diagonal top
+                  [row - 1, column + 2], // diagonal top-right
+                  [row + 1, column - 1], // diagonal bottom-left
+                  [row + 2, column], // diagonal bottom
+                  [row + 1, column + 2] // diagonal bottom-right
+              ];
 
         let potentialNeighbours: number[][] = [];
         if (this.orthogonalAdjacency) {
@@ -254,9 +254,13 @@ export class Board {
             potentialNeighbours = potentialNeighbours.concat(diagonal);
         }
 
-
         for (const [nRow, nColumn] of potentialNeighbours) {
-            if (nRow >= 0 && nColumn >= 0 && nRow < this.size && nColumn < this.size) {
+            if (
+                nRow >= 0 &&
+                nColumn >= 0 &&
+                nRow < this.size &&
+                nColumn < this.size
+            ) {
                 neighbours.push([nRow, nColumn]);
             }
         }
@@ -264,7 +268,11 @@ export class Board {
         return neighbours;
     }
 
-    private countAround(x: number, y: number, checker: (c: LogicCell) => boolean): number {
+    private countAround(
+        x: number,
+        y: number,
+        checker: (c: LogicCell) => boolean
+    ): number {
         let neighbours = this.getNeighbors(x, y);
         let n = 0;
 
