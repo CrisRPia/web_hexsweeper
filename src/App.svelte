@@ -1,63 +1,36 @@
 <script lang="ts">
     import { fade, fly } from "svelte/transition";
-    import MagnifyingGlass from "./MagnifyingGlass.svelte";
-    import Flag from "./Flag.svelte";
-    import { Modal, ProgressBar, modalStore } from "@skeletonlabs/skeleton";
-    import ProgressHex from "./ProgressHex.svelte";
-    import { settings } from "./settings";
-    import type { ModalSettings } from "@skeletonlabs/skeleton";
-    import type { ModalComponent } from "@skeletonlabs/skeleton";
-    import Settings from "./Settings.svelte";
-    import Board from "./Board.svelte";
-    import { main_board } from "./main_board";
-    import { Board as LogicBoard } from "./types/Board";
-    import RegenerateButton from "./RegenerateButton.svelte";
-    import Controls from "./Controls.svelte";
+    import { Modal, ProgressBar } from "@skeletonlabs/skeleton";
+    import { Board as LogicBoard } from "$lib/types/Board";
+    import { main_board } from "$lib/stores/main_board";
+    import { openModal } from "$lib/stores/modals";
+    import Board from "$lib/Components/Board/Board.svelte";
+    import ProgressHex from "$lib/Components/UI/ProgressHex.svelte";
+    import RegenerateButton from "$lib/Components/UI/RegenerateButton.svelte";
+    import { settings } from "$lib/stores/settings";
+    import MagnifyingGlass from "$lib/Components/UI/MagnifyingGlass.svelte";
+    import Flag from "$lib/Components/UI/Flag.svelte";
+
     let board: LogicBoard;
     main_board.subscribe(() => {
         board = $main_board;
     });
 
-    function sleep(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+    async function sleep(ms: number) {
+        return await new Promise((resolve) => setTimeout(resolve, ms));
     }
-    async function starter() {
+    async function init() {
         main_board.set(new LogicBoard(0, 0, true, true, 0));
         // This is done to hide ugly initial rendering of panzoom
         await sleep(100);
         main_board.set(new LogicBoard(10, 10, true, true, 0));
     }
-    starter();
-
-    const settingsComponent: ModalComponent = {
-        // Pass a reference to your custom component
-        ref: Settings
-    };
-    const controlsComponent: ModalComponent = {
-        // Pass a reference to your custom component
-        ref: Controls
-    };
-    const settingsModal: ModalSettings = {
-        type: "component",
-        // Pass the component directly:
-        component: settingsComponent
-    };
-    const controlsModal: ModalSettings = {
-        type: "component",
-        // Pass the component directly:
-        component: controlsComponent
-    };
+    init();
 </script>
 
-<div
-    class="btn-group-vertical variant-glass rounded fixed right-0 mx-5 my-2 z-10"
->
-    <button on:click={() => modalStore.trigger(settingsModal)}>
-        Opciones
-    </button>
-    <button on:click={() => modalStore.trigger(controlsModal)}>
-        Cómo jugar
-    </button>
+<div class="btn-group-vertical variant-glass rounded fixed right-0 m-5 z-10">
+    <button on:click={() => openModal("settings")}> Opciones </button>
+    <button on:click={() => openModal("controls")}> Cómo jugar </button>
 </div>
 
 {#if board.size == 0}
@@ -89,7 +62,7 @@
                 />
                 <button
                     class="m-1 btn variant-filled-tertiary rounded mt-1 w-fit"
-                    on:click={() => modalStore.trigger(settingsModal)}
+                    on:click={() => openModal("settings")}
                 >
                     Configurar tablero
                 </button>

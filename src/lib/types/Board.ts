@@ -13,11 +13,11 @@ export class Board {
     cells: Array<Array<LogicCell>>;
     size: number;
     mines: number;
-    flags: number = 0;
+    flags = 0;
     orthogonalAdjacency: boolean;
     diagonalAdjacency: boolean;
     initialUnknowns: number;
-    correctFlags: number = 0;
+    correctFlags = 0;
     punish: boolean;
     subscribe;
     setBoard;
@@ -26,11 +26,11 @@ export class Board {
     constructor(
         size: number,
         mines: number,
-        adjacent: boolean = true,
-        diagonal: boolean = true,
-        unknowns: number = 0,
-        punish: boolean = true,
-        autogenerate: boolean = true
+        adjacent = true,
+        diagonal = true,
+        unknowns = 0,
+        punish = true,
+        autogenerate = true
     ) {
         this.orthogonalAdjacency = adjacent;
         this.diagonalAdjacency = diagonal;
@@ -52,7 +52,7 @@ export class Board {
     }
 
     public expand(x: number, y: number) {
-        let cell = this.cells[x][y];
+        const cell = this.cells[x][y];
         if (!cell.discovered || cell.mined || cell.forbidden) {
             return;
         }
@@ -75,7 +75,7 @@ export class Board {
         ) {
             this.getNeighbors(x, y).forEach((n) => {
                 if (flags == correctFlags) {
-                    let c = this.cells[n[0]][n[1]];
+                    const c = this.cells[n[0]][n[1]];
                     if (c.mined && !c.discovered && !c.flagged) {
                         this.flag(n[0], n[1]);
                         return;
@@ -90,7 +90,7 @@ export class Board {
     }
 
     public hoverIn(x: number, y: number) {
-        let ns = this.getNeighbors(x, y);
+        const ns = this.getNeighbors(x, y);
         ns.forEach((n) => {
             this.cells[n[0]][n[1]].highlighted = true;
         });
@@ -98,7 +98,7 @@ export class Board {
     }
 
     public hoverOut(x: number, y: number) {
-        let ns = this.getNeighbors(x, y);
+        const ns = this.getNeighbors(x, y);
         ns.forEach((n) => {
             this.cells[n[0]][n[1]].highlighted = false;
         });
@@ -129,7 +129,7 @@ export class Board {
     }
 
     public flag(x: number, y: number) {
-        let cell = this.cells[x][y];
+        const cell = this.cells[x][y];
         if (cell.discovered) {
             return;
         }
@@ -149,12 +149,12 @@ export class Board {
         }
         let currentLevel: Array<Array<number>> = [[x, y]];
         let nextLevel: Array<Array<number>> = [];
-        let visited: Set<string> = new Set();
+        const visited: Set<string> = new Set();
         visited.add(`${x},${y}`);
         let distance = 0;
 
         while (currentLevel.length > 0) {
-            for (let coords of currentLevel) {
+            for (const coords of currentLevel) {
                 cell = this.cells[coords[0]][coords[1]];
                 if (cell.forbidden) {
                     continue;
@@ -162,8 +162,8 @@ export class Board {
                 if (cell.value == 0) {
                     this.getNeighbors(coords[0], coords[1]).forEach(
                         (neighbour) => {
-                            let neighbourKey = `${neighbour[0]},${neighbour[1]}`;
-                            let c = this.cells[neighbour[0]][neighbour[1]];
+                            const neighbourKey = `${neighbour[0]},${neighbour[1]}`;
+                            const c = this.cells[neighbour[0]][neighbour[1]];
                             if (!c.discovered && !visited.has(neighbourKey)) {
                                 nextLevel.push(neighbour);
                                 visited.add(neighbourKey);
@@ -206,7 +206,7 @@ export class Board {
     }
 
     getNeighbors(row: number, column: number) {
-        let neighbours = [];
+        const neighbours = [];
 
         const isEvenRow = row % 2 === 0;
 
@@ -273,7 +273,7 @@ export class Board {
         y: number,
         checker: (c: LogicCell) => boolean
     ): number {
-        let neighbours = this.getNeighbors(x, y);
+        const neighbours = this.getNeighbors(x, y);
         let n = 0;
 
         neighbours.forEach((e) => {
@@ -285,7 +285,7 @@ export class Board {
     }
 
     private generateBoard(): Array<Array<LogicCell>> {
-        let output = Array.from({ length: this.size }, () =>
+        const output = Array.from({ length: this.size }, () =>
             Array.from({ length: this.size }, () => new LogicCell())
         );
         return output;

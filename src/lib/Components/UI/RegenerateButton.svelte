@@ -1,0 +1,33 @@
+<script lang="ts">
+    import { main_board } from "$lib/stores/main_board";
+    import { Board } from "$lib/types/Board";
+
+    export let size: number;
+    export let mines: number;
+    export let cls = "";
+    export let diagonal: boolean = $main_board.diagonalAdjacency;
+    export let orthogonal: boolean = $main_board.orthogonalAdjacency;
+    export let unknowns: number = $main_board.initialUnknowns;
+    export let punish: boolean = $main_board.punish;
+
+    function sleep(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function regenerate() {
+        if ($main_board.size == 0) {
+            return;
+        }
+        main_board.set(new Board(0, 0));
+        // stuff bugs out if I dont wait. idk. FIX if bored
+        // TODO make the board generate while waiting; make it async
+        await sleep(1000);
+        main_board.set(
+            new Board(size, mines, orthogonal, diagonal, unknowns, punish)
+        );
+    }
+</script>
+
+<button disabled={$main_board.size == 0} class={cls} on:click={regenerate}>
+    {$main_board.size == 0 ? "Regenerando tablero..." : "Regenerar tablero"}
+</button>

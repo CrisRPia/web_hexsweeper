@@ -1,13 +1,13 @@
 <script lang="ts">
     import { popup, type PopupSettings } from "@skeletonlabs/skeleton";
-    import { Board as LogicBoard } from "./types/Board";
-    import Board from "./Board.svelte";
-    import { settings } from "./settings";
-    import type { LogicCell } from "./types/LogicCell";
-    import { main_board } from "./main_board";
+    import { Board as LogicBoard } from "$lib/types/Board";
+    import { settings } from "$lib/stores/settings";
+    import type { LogicCell } from "$lib/types/LogicCell";
+    import { main_board } from "$lib/stores/main_board";
     import { fly } from "svelte/transition";
-    import Flag from "./Flag.svelte";
-    import MagnifyingGlass from "./MagnifyingGlass.svelte";
+    import MagnifyingGlass from "../UI/MagnifyingGlass.svelte";
+    import Flag from "../UI/Flag.svelte";
+    import Board from "../Board/Board.svelte";
     const popupHover: PopupSettings = {
         event: "hover",
         target: "popupHover",
@@ -23,11 +23,13 @@
         $main_board.orthogonalAdjacency,
         $main_board.diagonalAdjacency
     );
-    sampleBoard.cells.forEach((row) => {
-        row.forEach((c: LogicCell) => {
-            c.discovered = true;
-        });
-    });
+
+    for (const row of sampleBoard.cells) {
+        for (const cell of row) {
+            cell.discovered = true;
+        }
+    }
+
     let flag = new LogicBoard(1, 1);
     flag.flag(0, 0);
     let unknown = new LogicBoard(4, 5);

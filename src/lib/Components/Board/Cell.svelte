@@ -1,12 +1,10 @@
 <script lang="ts">
-    import type { LogicCell } from "./types/LogicCell";
-    import type { Board } from "./types/Board";
-    import { settings } from "./settings";
+    import { LogicCell } from "$lib/types/LogicCell";
+    import { settings } from "$lib/stores/settings";
+    import { Board } from "$lib/types/Board";
 
     export let width = 30;
     let logic: LogicCell;
-    let xMemory = 0;
-    let yMemory = 0;
     export let x: number;
     export let y: number;
     export let board: Board;
@@ -30,17 +28,11 @@
         board.flag(x, y);
     }
 
-    function handleDown(e: MouseEvent) {
-        yMemory = e.y;
-        xMemory = e.x;
-    }
     function handleUp(e: MouseEvent) {
-        if (yMemory === e.y && xMemory === e.x && e.button != 2) {
-            if ($settings.flag) {
-                flagCell(e);
-            } else {
-                discover();
-            }
+        if ($settings.flag) {
+            flagCell(e);
+        } else {
+            discover();
         }
     }
     function handleKey(e: KeyboardEvent) {
@@ -50,13 +42,14 @@
     }
 </script>
 
-<div class="hexagon hexagon2 inline-block" style="--width: {width}px">
-    <div class="hexagon-in1">
+<div
+    class="rotate-[120deg] overflow-hidden hexagon inline-block"
+    style="--width: {width}px"
+>
+    <div class="w-full h-full overflow-hidden -rotate-[60deg]">
         <div
-            id="c"
             tabindex={x * 10 + y + 20}
             role="button"
-            on:mousedown={handleDown}
             on:mouseup={handleUp}
             on:keypress={handleKey}
             on:contextmenu={flagCell}
@@ -65,9 +58,12 @@
             on:mouseover={() => board.hoverIn(x, y)}
             on:mouseout={() => board.hoverOut(x, y)}
             class="
-            hexagon-in2
-            hex
-            {logic.forbidden
+                duration-150
+                ease-in
+                w-full
+                h-full
+                -rotate-[60deg]
+                {logic.forbidden
                 ? 'bg-opacity-0'
                 : logic.flagged
                 ? 'bg-success-400 dark:bg-success-500'
@@ -76,19 +72,27 @@
                 : logic.discovered
                 ? 'bg-tertiary-400 bg-opacity-30'
                 : 'bg-tertiary-400 bg-opacity-100'}
-            w-8
-            inline-block
-            transition-colors
-            select-none
-            hover:brightness-110
-            hover:dark:brightness-105
-            {logic.highlighted ? 'brightness-110 dark:brightness-150' : ''}
+                w-8
+                inline-block
+                transition-colors
+                select-none
+                hover:brightness-110
+                hover:dark:brightness-105
+                {logic.highlighted ? 'brightness-110 dark:brightness-150' : ''}
             "
         >
             {#if logic.discovered && !logic.mined && logic.value != 0}
                 <p
                     class="
-                    {logic.forbidden ? 'blur' : ''}
+                        duation-150
+                        ease-in
+                        absolute
+                        top-1/2
+                        left-1/2
+                        font-mono
+                        -translate-x-1/2
+                        -translate-y-1/2
+                        {logic.forbidden ? 'blur' : ''}
                     "
                 >
                     {logic.value}
@@ -99,48 +103,7 @@
 </div>
 
 <style>
-    #c {
-        transition-duration: 150ms;
-        transition-timing-function: ease-in;
-    }
-    p {
-        transition-duration: 150ms;
-        transition-timing-function: ease-in;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        font-family: monospace;
-        transform: translate(-50%, -50%);
-    }
     .hexagon {
-        overflow: hidden;
-        visibility: hidden;
-        -webkit-transform: rotate(120deg);
-        -moz-transform: rotate(120deg);
-        -o-transform: rotate(120deg);
-        transform: rotate(120deg);
-    }
-    .hexagon-in1 {
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        -webkit-transform: rotate(-60deg);
-        -moz-transform: rotate(-60deg);
-        -o-transform: rotate(-60deg);
-        transform: rotate(-60deg);
-    }
-
-    .hexagon-in2 {
-        width: 100%;
-        height: 100%;
-        visibility: visible;
-        -webkit-transform: rotate(-60deg);
-        -moz-transform: rotate(-60deg);
-        -o-transform: rotate(-60deg);
-        transform: rotate(-60deg);
-    }
-
-    .hexagon2 {
         --width: 40px;
         --base_margin: calc(var(--width) * -1.1);
         width: var(--width);

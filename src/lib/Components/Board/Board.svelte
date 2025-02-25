@@ -1,9 +1,9 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
     import Cell from "./Cell.svelte";
-    import type { Board } from "./types/Board";
     import Panzoom from "@panzoom/panzoom";
     import type { PanzoomObject } from "@panzoom/panzoom";
+    import { Board } from "$lib/types/Board";
 
     let wrapper: HTMLDivElement;
 
@@ -14,7 +14,6 @@
     let panzoomElement;
     let panzoom: PanzoomObject;
 
-    // This function is called when the div is mounted in the DOM
     function initPanzoom(node: HTMLElement) {
         if (!moveable) {
             return;
@@ -40,18 +39,20 @@
 </script>
 
 <div
-    id={moveable ? "wrap" : undefined}
     on:wheel={panzoom.zoomWithWheel}
     bind:this={wrapper}
-    class={moveable ? "overflow-hidden -z-1" : "pl-5 pt-7 -mb-3 w-fit"}
+    class="
+        {moveable
+        ? 'overflow-hidden fixed left-1/2 top-1/2 -translate-y-1/2 -z-1'
+        : 'pl-5 pt-7 -mb-3 w-fit'}
+    "
     style={moveable
         ? "width: 100vw; height: 100vh; left: 0px; position:absolute"
         : undefined}
 >
     <div use:initPanzoom id="mover" class="w-fit h-fit">
         <div
-            id="c"
-            class="relative whitespace-nowrap transition-transform w-fit h-fit"
+            class="relative overflow-visible whitespace-nowrap transition-transform w-fit h-fit"
         >
             {#each board.cells as row, x}
                 <div
@@ -78,15 +79,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    #c {
-        overflow: visible;
-    }
-    #wrap {
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-</style>

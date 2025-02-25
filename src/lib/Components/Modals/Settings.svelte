@@ -5,19 +5,20 @@
         LightSwitch,
         SlideToggle
     } from "@skeletonlabs/skeleton";
-    import { main_board as board } from "./main_board";
-    import { Board as LogicBoard } from "./types/Board";
-    import RegenerateButton from "./RegenerateButton.svelte";
-    import Board from "./Board.svelte";
+    import { Board as LogicBoard } from "$lib/types/Board";
     import { writable } from "svelte/store";
     import { tick } from "svelte";
-    import { settings } from "./settings";
-    let difficulty = $board.mines / ($board.size * $board.size) || 0.15;
-    let size = $board.size;
-    let orthogonal = $board.orthogonalAdjacency;
-    let diagonal = $board.diagonalAdjacency;
-    let unknown = $board.initialUnknowns != 0;
-    let punish = $board.punish;
+    import { main_board } from "$lib/stores/main_board";
+    import { settings } from "$lib/stores/settings";
+    import Board from "$lib/Components/Board/Board.svelte";
+    import RegenerateButton from "$lib/Components/UI/RegenerateButton.svelte";
+    let difficulty =
+        $main_board.mines / ($main_board.size * $main_board.size) || 0.15;
+    let size = $main_board.size;
+    let orthogonal = $main_board.orthogonalAdjacency;
+    let diagonal = $main_board.diagonalAdjacency;
+    let unknown = $main_board.initialUnknowns != 0;
+    let punish = $main_board.punish;
 
     let sampleBoard = writable(
         new LogicBoard(5, 25 * difficulty, orthogonal, diagonal, 0)
