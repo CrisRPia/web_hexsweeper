@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { run, createBubbler, stopPropagation } from 'svelte/legacy';
+    import { createBubbler, stopPropagation } from 'svelte/legacy';
 
     const bubble = createBubbler();
     import {
@@ -9,10 +9,8 @@
         SlideToggle
     } from "@skeletonlabs/skeleton";
     import { Board as LogicBoard } from "$lib/types/Board";
-    import { writable } from "svelte/store";
-    import { tick } from "svelte";
-    import { main_board } from "$lib/stores/main_board";
-    import { settings } from "$lib/stores/settings";
+    import { main_board } from "$lib/stores/main_board.svelte";
+    import { settings } from "$lib/stores/settings.svelte";
     import Board from "$lib/Components/Board/Board.svelte";
     import RegenerateButton from "$lib/Components/UI/RegenerateButton.svelte";
     let difficulty =
@@ -23,29 +21,9 @@
     let unknown = $state($main_board.initialUnknowns != 0);
     let punish = $state($main_board.punish);
 
-    let sampleBoard = writable(
+    let sampleBoard = $derived(
         new LogicBoard(5, 25 * difficulty, orthogonal, diagonal, 0)
     );
-
-    async function updateSample() {
-        let uk = unknown ? 25 * difficulty : 0;
-        sampleBoard.set(new LogicBoard(0, 0));
-        await tick();
-        sampleBoard.set(
-            new LogicBoard(
-                5, // size
-                25 * difficulty, // mines
-                orthogonal,
-                diagonal,
-                uk,
-                punish
-            )
-        );
-    }
-
-    run(() => {
-        updateSample();
-    });
 </script>
 
 <div

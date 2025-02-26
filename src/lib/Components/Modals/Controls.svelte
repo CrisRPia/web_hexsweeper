@@ -1,21 +1,22 @@
 <script lang="ts">
     import { popup, type PopupSettings } from "@skeletonlabs/skeleton";
     import { Board as LogicBoard } from "$lib/types/Board";
-    import { settings } from "$lib/stores/settings";
+    import { settings } from "$lib/stores/settings.svelte";
     import type { LogicCell } from "$lib/types/LogicCell";
-    import { main_board } from "$lib/stores/main_board";
+    import { main_board } from "$lib/stores/main_board.svelte";
     import { fly } from "svelte/transition";
     import MagnifyingGlass from "../UI/MagnifyingGlass.svelte";
     import Flag from "../UI/Flag.svelte";
     import Board from "../Board/Board.svelte";
+
     const popupHover: PopupSettings = {
         event: "hover",
         target: "popupHover",
         placement: "top"
     };
-    let mine = new LogicBoard(1, 1);
+    const mine = new LogicBoard(1, 1);
     mine.discover_animate(0, 0);
-    let discovered = new LogicBoard(1, 0);
+    const discovered = new LogicBoard(1, 0);
     discovered.discover_animate(0, 0);
     let sampleBoard = new LogicBoard(
         4,
@@ -52,12 +53,12 @@
             <input
                 class="checkbox"
                 type="checkbox"
-                bind:checked={$settings.touchscreen}
+                bind:checked={settings.touchscreen}
             />
             <p>Pantalla táctil</p>
         </label>
     </div>
-    {#if !$settings.touchscreen}
+    {#if !settings.touchscreen}
         <div class="table-container mb-5" in:fly|global={{ y: 10, duration: 500 }}>
             <table class="table table-hover variant-ringed">
                 <thead>
@@ -117,7 +118,11 @@
                         <td>Celda con valor</td>
                         <td>
                             <span
-                                use:popup={popupHover}
+                                use:popup={{
+                                    event: "hover",
+                                    target: "popupHover",
+                                    placement: "top"
+                                }}
                                 class="variant-ghost-warning rounded p-1"
                                 >Expandir</span
                             >

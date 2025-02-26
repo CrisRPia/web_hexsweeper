@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { main_board } from "$lib/stores/main_board";
+    import { main_board } from "$lib/stores/main_board.svelte";
     import { Board } from "$lib/types/Board";
 
     interface Props {

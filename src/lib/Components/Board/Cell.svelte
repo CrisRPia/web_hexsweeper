@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { preventDefault } from 'svelte/legacy';
 
     import { LogicCell } from "$lib/types/LogicCell";
-    import { settings } from "$lib/stores/settings";
+    import { settings } from "$lib/stores/settings.svelte";
     import { Board } from "$lib/types/Board";
 
     let logic: LogicCell = $state();
@@ -40,7 +39,7 @@
     }
 
     function handleUp(e: MouseEvent) {
-        if ($settings.flag) {
+        if (settings.flag) {
             flagCell(e);
         } else {
             discover();
@@ -54,7 +53,7 @@
 </script>
 
 <div
-    class="rotate-[120deg] overflow-hidden hexagon inline-block"
+    class="rotate-[120deg] overflow-hidden invisible hexagon inline-block"
     style="--width: {width}px"
 >
     <div class="w-full h-full overflow-hidden -rotate-[60deg]">
@@ -64,8 +63,8 @@
             onmouseup={handleUp}
             onkeypress={handleKey}
             oncontextmenu={flagCell}
-            onfocus={preventDefault(() => board.hoverIn(x, y))}
-            onblur={preventDefault(() => board.hoverOut(x, y))}
+            onfocus={() => board.hoverIn(x, y)}
+            onblur={() => board.hoverOut(x, y)}
             onmouseover={() => board.hoverIn(x, y)}
             onmouseout={() => board.hoverOut(x, y)}
             class="
@@ -73,6 +72,7 @@
                 ease-in
                 w-full
                 h-full
+                visible
                 -rotate-[60deg]
                 {logic.forbidden
                 ? 'bg-opacity-0'
