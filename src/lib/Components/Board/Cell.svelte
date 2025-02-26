@@ -1,13 +1,24 @@
 <script lang="ts">
+    import { preventDefault } from 'svelte/legacy';
+
     import { LogicCell } from "$lib/types/LogicCell";
     import { settings } from "$lib/stores/settings";
     import { Board } from "$lib/types/Board";
 
-    export let width = 30;
-    let logic: LogicCell;
-    export let x: number;
-    export let y: number;
-    export let board: Board;
+    let logic: LogicCell = $state();
+    interface Props {
+        width?: number;
+        x: number;
+        y: number;
+        board: Board;
+    }
+
+    let {
+        width = 30,
+        x,
+        y,
+        board
+    }: Props = $props();
 
     board.subscribe(() => {
         logic = board.cells[x][y];
@@ -50,13 +61,13 @@
         <div
             tabindex={x * 10 + y + 20}
             role="button"
-            on:mouseup={handleUp}
-            on:keypress={handleKey}
-            on:contextmenu={flagCell}
-            on:focus|preventDefault={() => board.hoverIn(x, y)}
-            on:blur|preventDefault={() => board.hoverOut(x, y)}
-            on:mouseover={() => board.hoverIn(x, y)}
-            on:mouseout={() => board.hoverOut(x, y)}
+            onmouseup={handleUp}
+            onkeypress={handleKey}
+            oncontextmenu={flagCell}
+            onfocus={preventDefault(() => board.hoverIn(x, y))}
+            onblur={preventDefault(() => board.hoverOut(x, y))}
+            onmouseover={() => board.hoverIn(x, y)}
+            onmouseout={() => board.hoverOut(x, y)}
             class="
                 duration-150
                 ease-in

@@ -2,13 +2,25 @@
     import { main_board } from "$lib/stores/main_board";
     import { Board } from "$lib/types/Board";
 
-    export let size: number;
-    export let mines: number;
-    export let cls = "";
-    export let diagonal: boolean = $main_board.diagonalAdjacency;
-    export let orthogonal: boolean = $main_board.orthogonalAdjacency;
-    export let unknowns: number = $main_board.initialUnknowns;
-    export let punish: boolean = $main_board.punish;
+    interface Props {
+        size: number;
+        mines: number;
+        cls?: string;
+        diagonal?: boolean;
+        orthogonal?: boolean;
+        unknowns?: number;
+        punish?: boolean;
+    }
+
+    let {
+        size,
+        mines,
+        cls = "",
+        diagonal = $main_board.diagonalAdjacency,
+        orthogonal = $main_board.orthogonalAdjacency,
+        unknowns = $main_board.initialUnknowns,
+        punish = $main_board.punish
+    }: Props = $props();
 
     function sleep(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,6 +40,6 @@
     }
 </script>
 
-<button disabled={$main_board.size == 0} class={cls} on:click={regenerate}>
+<button disabled={$main_board.size == 0} class={cls} onclick={regenerate}>
     {$main_board.size == 0 ? "Regenerando tablero..." : "Regenerar tablero"}
 </button>

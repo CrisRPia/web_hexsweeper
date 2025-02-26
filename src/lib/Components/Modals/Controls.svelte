@@ -180,7 +180,7 @@
         <div>
             <h2 class="h2 flex justify-between items-center">
                 <span>Incógnitas</span>
-                <div class="inline" />
+                <div class="inline"></div>
             </h2>
             Celdas sin minas ni información. Pueden generarse con el tablero o ser
             una penalización. Véase que este tablero tiene celdas invisibles: esas
@@ -201,5 +201,5 @@
     <p class="text-sm mt-2 code">
         Minas descubiertas + Banderas = Valor de celda
     </p>
-    <div class="arrow variant-filled-warning" />
+    <div class="arrow variant-filled-warning"></div>
 </div>

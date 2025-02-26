@@ -11,10 +11,6 @@
     import MagnifyingGlass from "$lib/Components/UI/MagnifyingGlass.svelte";
     import Flag from "$lib/Components/UI/Flag.svelte";
 
-    let board: LogicBoard;
-    main_board.subscribe(() => {
-        board = $main_board;
-    });
 
     async function sleep(ms: number) {
         return await new Promise((resolve) => setTimeout(resolve, ms));
@@ -29,26 +25,26 @@
 </script>
 
 <div class="btn-group-vertical variant-glass rounded fixed right-0 m-5 z-10">
-    <button on:click={() => openModal("settings")}> Opciones </button>
-    <button on:click={() => openModal("controls")}> Cómo jugar </button>
+    <button onclick={() => openModal("settings")}> Opciones </button>
+    <button onclick={() => openModal("controls")}> Cómo jugar </button>
 </div>
 
-{#if board.size == 0}
+{#if $main_board.size == 0}
     <div class="w-1/2 left-1/4 top-10 z-50 fixed my-auto">
         <ProgressBar />
     </div>
 {:else}
     <div transition:fade|global>
-        <Board board={$board} />
+        <Board board={$main_board} />
     </div>
     <div
         in:fly|global={{ y: -10 }}
         out:fly|global={{ y: -10 }}
         class="flex fixed rounded m-5 justify-between z-50"
     >
-        <ProgressHex progress={$board.flags} total={$board.mines} />
+        <ProgressHex progress={$main_board.flags} total={$main_board.mines} />
     </div>
-    {#if $board.correctFlags == $board.mines && $board.flags <= $board.mines}
+    {#if $main_board.correctFlags == $main_board.mines && $main_board.flags <= $main_board.mines}
         <div
             transition:fade|global={{ duration: 500 }}
             class="left-0 right-0 bottom-1/4 w-fit mx-auto select-none justify-center z-20 fixed"
@@ -56,13 +52,13 @@
             <div class="card p-2 z-20">
                 <h1 class="h1 text-center mt-3 mb-5">¡Victoria!</h1>
                 <RegenerateButton
-                    size={$board.size}
-                    mines={$board.mines}
+                    size={$main_board.size}
+                    mines={$main_board.mines}
                     cls="m-1 btn variant-filled-primary rounded mt-1 w-fit"
                 />
                 <button
                     class="m-1 btn variant-filled-tertiary rounded mt-1 w-fit"
-                    on:click={() => openModal("settings")}
+                    onclick={() => openModal("settings")}
                 >
                     Configurar tablero
                 </button>
@@ -82,9 +78,9 @@
                 style="transform: translateX({$settings.flag
                     ? 4.5
                     : 0}rem); width: 4.4rem;"
-            />
+></div>
             <button
-                on:click={() => ($settings.flag = false)}
+                onclick={() => ($settings.flag = false)}
                 class="text-3xlg rounded-s-full rounded-e p-0 mr-0 m-4 w-16"
                 style="font-size: 3rem;"
             >
@@ -92,7 +88,7 @@
                 <MagnifyingGlass />
             </button>
             <button
-                on:click={() => ($settings.flag = true)}
+                onclick={() => ($settings.flag = true)}
                 class="rounded-e-full rounded-s ml-0 p-0 m-4 w-16"
                 style="font-size: 3rem;"
             >

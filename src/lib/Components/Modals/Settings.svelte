@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { run, createBubbler, stopPropagation } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     import {
         Accordion,
         AccordionItem,
@@ -13,12 +16,12 @@
     import Board from "$lib/Components/Board/Board.svelte";
     import RegenerateButton from "$lib/Components/UI/RegenerateButton.svelte";
     let difficulty =
-        $main_board.mines / ($main_board.size * $main_board.size) || 0.15;
-    let size = $main_board.size;
-    let orthogonal = $main_board.orthogonalAdjacency;
-    let diagonal = $main_board.diagonalAdjacency;
-    let unknown = $main_board.initialUnknowns != 0;
-    let punish = $main_board.punish;
+        $state($main_board.mines / ($main_board.size * $main_board.size) || 0.15);
+    let size = $state($main_board.size);
+    let orthogonal = $state($main_board.orthogonalAdjacency);
+    let diagonal = $state($main_board.diagonalAdjacency);
+    let unknown = $state($main_board.initialUnknowns != 0);
+    let punish = $state($main_board.punish);
 
     let sampleBoard = writable(
         new LogicBoard(5, 25 * difficulty, orthogonal, diagonal, 0)
@@ -40,7 +43,9 @@
         );
     }
 
-    $: updateSample();
+    run(() => {
+        updateSample();
+    });
 </script>
 
 <div
@@ -77,114 +82,144 @@
                         ? "variant-ghost-warning"
                         : ""}
                 >
-                    <svelte:fragment slot="lead">
-                        <div on:click|stopPropagation>
-                            <SlideToggle
-                                active="bg-success-500"
-                                bind:checked={diagonal}
-                                name="slider-diagonal"
-                                >Adyacencia diagonal</SlideToggle
+                    {#snippet lead()}
+                                    
+                            <div onclick={stopPropagation(bubble('click'))}>
+                                <SlideToggle
+                                    active="bg-success-500"
+                                    bind:checked={diagonal}
+                                    name="slider-diagonal"
+                                    >Adyacencia diagonal</SlideToggle
+                                >
+                            </div>
+                        
+                                    {/snippet}
+                    {#snippet summary()}
+                                    
+                            <p></p>
+                        
+                                    {/snippet}
+                    {#snippet content()}
+                                    
+                            Los valores de las celdas y las expansiones considerarán
+                            las celdas que comparten
+                            <span class="variant-ghost-secondary rounded"
+                                >vértices</span
                             >
-                        </div>
-                    </svelte:fragment>
-                    <svelte:fragment slot="summary">
-                        <p />
-                    </svelte:fragment>
-                    <svelte:fragment slot="content">
-                        Los valores de las celdas y las expansiones considerarán
-                        las celdas que comparten
-                        <span class="variant-ghost-secondary rounded"
-                            >vértices</span
-                        >
-                        como vecinas.
-                    </svelte:fragment>
+                            como vecinas.
+                        
+                                    {/snippet}
                 </AccordionItem>
                 <AccordionItem
                     class={!diagonal && !orthogonal
                         ? "variant-ghost-warning"
                         : ""}
                 >
-                    <svelte:fragment slot="lead">
-                        <div on:click|stopPropagation>
-                            <SlideToggle
-                                active="bg-success-500"
-                                bind:checked={orthogonal}
-                                name="slider-orthogonal"
-                                >Adyacencia ortogonal</SlideToggle
+                    {#snippet lead()}
+                                    
+                            <div onclick={stopPropagation(bubble('click'))}>
+                                <SlideToggle
+                                    active="bg-success-500"
+                                    bind:checked={orthogonal}
+                                    name="slider-orthogonal"
+                                    >Adyacencia ortogonal</SlideToggle
+                                >
+                            </div>
+                        
+                                    {/snippet}
+                    {#snippet summary()}
+                                    
+                            <p></p>
+                        
+                                    {/snippet}
+                    {#snippet content()}
+                                    
+                            Los valores de las celdas y las expansiones considerarán
+                            las celdas que comparten
+                            <span class="variant-ghost-secondary rounded"
+                                >lados</span
                             >
-                        </div>
-                    </svelte:fragment>
-                    <svelte:fragment slot="summary">
-                        <p />
-                    </svelte:fragment>
-                    <svelte:fragment slot="content">
-                        Los valores de las celdas y las expansiones considerarán
-                        las celdas que comparten
-                        <span class="variant-ghost-secondary rounded"
-                            >lados</span
-                        >
-                        como vecinas.
-                    </svelte:fragment>
+                            como vecinas.
+                        
+                                    {/snippet}
                 </AccordionItem>
                 <AccordionItem>
-                    <svelte:fragment slot="lead">
-                        <div on:click|stopPropagation>
-                            <SlideToggle
-                                bind:checked={unknown}
-                                active="bg-success-500"
-                                name="slider-unknown"
-                                >Generar incógnitas</SlideToggle
-                            >
-                        </div>
-                    </svelte:fragment>
-                    <svelte:fragment slot="summary">
-                        <p />
-                    </svelte:fragment>
-                    <svelte:fragment slot="content">
-                        Generar algunas celdas sin minas carentes de
-                        información. La frecuencia de las mismas depende de la
-                        dificultad.
-                    </svelte:fragment>
+                    {#snippet lead()}
+                                    
+                            <div onclick={stopPropagation(bubble('click'))}>
+                                <SlideToggle
+                                    bind:checked={unknown}
+                                    active="bg-success-500"
+                                    name="slider-unknown"
+                                    >Generar incógnitas</SlideToggle
+                                >
+                            </div>
+                        
+                                    {/snippet}
+                    {#snippet summary()}
+                                    
+                            <p></p>
+                        
+                                    {/snippet}
+                    {#snippet content()}
+                                    
+                            Generar algunas celdas sin minas carentes de
+                            información. La frecuencia de las mismas depende de la
+                            dificultad.
+                        
+                                    {/snippet}
                 </AccordionItem>
                 <AccordionItem>
-                    <svelte:fragment slot="lead">
-                        <div on:click|stopPropagation>
-                            <SlideToggle
-                                disabled
-                                active="bg-success-500"
-                                name="slider-winnable"
-                                >Garantizar tablero ganable</SlideToggle
-                            >
-                        </div>
-                    </svelte:fragment>
-                    <svelte:fragment slot="summary">
-                        <p />
-                    </svelte:fragment>
-                    <svelte:fragment slot="content">
-                        Al generar el tablero se revelan suficientes celdas para
-                        poder ganar sin tener que adivinar. Esta generación
-                        puede llevar un tiempo, dependiendo de la configuración
-                        y la suerte.
-                    </svelte:fragment>
+                    {#snippet lead()}
+                                    
+                            <div onclick={stopPropagation(bubble('click'))}>
+                                <SlideToggle
+                                    disabled
+                                    active="bg-success-500"
+                                    name="slider-winnable"
+                                    >Garantizar tablero ganable</SlideToggle
+                                >
+                            </div>
+                        
+                                    {/snippet}
+                    {#snippet summary()}
+                                    
+                            <p></p>
+                        
+                                    {/snippet}
+                    {#snippet content()}
+                                    
+                            Al generar el tablero se revelan suficientes celdas para
+                            poder ganar sin tener que adivinar. Esta generación
+                            puede llevar un tiempo, dependiendo de la configuración
+                            y la suerte.
+                        
+                                    {/snippet}
                 </AccordionItem>
                 <AccordionItem>
-                    <svelte:fragment slot="lead">
-                        <div on:click|stopPropagation>
-                            <SlideToggle
-                                bind:checked={punish}
-                                active="bg-success-500"
-                                name="slider-penalize"
-                                >Penalizar mala expansión</SlideToggle
-                            >
-                        </div>
-                    </svelte:fragment>
-                    <svelte:fragment slot="summary">
-                        <p />
-                    </svelte:fragment>
-                    <svelte:fragment slot="content">
-                        Al intentar expandir un hexágono inválido, la celda
-                        seleccionada se vuelve una incógnita.
-                    </svelte:fragment>
+                    {#snippet lead()}
+                                    
+                            <div onclick={stopPropagation(bubble('click'))}>
+                                <SlideToggle
+                                    bind:checked={punish}
+                                    active="bg-success-500"
+                                    name="slider-penalize"
+                                    >Penalizar mala expansión</SlideToggle
+                                >
+                            </div>
+                        
+                                    {/snippet}
+                    {#snippet summary()}
+                                    
+                            <p></p>
+                        
+                                    {/snippet}
+                    {#snippet content()}
+                                    
+                            Al intentar expandir un hexágono inválido, la celda
+                            seleccionada se vuelve una incógnita.
+                        
+                                    {/snippet}
                 </AccordionItem>
             </Accordion>
         </label>

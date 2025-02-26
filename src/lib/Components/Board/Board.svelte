@@ -5,14 +5,18 @@
     import type { PanzoomObject } from "@panzoom/panzoom";
     import { Board } from "$lib/types/Board";
 
-    let wrapper: HTMLDivElement;
+    let wrapper: HTMLDivElement = $state();
 
-    export let board: Board;
-    export let moveable = true;
-    export let width = 40;
+    interface Props {
+        board: Board;
+        moveable?: boolean;
+        width?: number;
+    }
+
+    let { board, moveable = true, width = 40 }: Props = $props();
 
     let panzoomElement;
-    let panzoom: PanzoomObject;
+    let panzoom: PanzoomObject = $state();
 
     function initPanzoom(node: HTMLElement) {
         if (!moveable) {
@@ -39,7 +43,7 @@
 </script>
 
 <div
-    on:wheel={panzoom.zoomWithWheel}
+    onwheel={panzoom.zoomWithWheel}
     bind:this={wrapper}
     class="
         {moveable
@@ -56,7 +60,7 @@
         >
             {#each board.cells as row, x}
                 <div
-                    on:contextmenu={(e) => {
+                    oncontextmenu={(e) => {
                         e.preventDefault();
                     }}
                     style="

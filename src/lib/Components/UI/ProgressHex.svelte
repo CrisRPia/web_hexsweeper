@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
     let tweenedPercent = tweened(0, {
@@ -10,12 +12,16 @@
         easing: cubicOut
     });
 
-    export let total = 100;
-    export let progress = 0;
-    $: {
+    interface Props {
+        total?: number;
+        progress?: number;
+    }
+
+    let { total = 100, progress = 0 }: Props = $props();
+    run(() => {
         tweenedPercent.set((progress / total) * 100);
         tweenedProgress.set(total - progress);
-    }
+    });
 </script>
 
 <div class="text-lg w-20 h-20 z-10">
