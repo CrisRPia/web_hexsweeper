@@ -69,7 +69,7 @@
                 >
                     {#each row as _, y}
                         {#if x < board.size && y < board.size}
-                            <div in:fade class="inline-block">
+                            <div in:fade|global class="inline-block">
                                 <Cell {x} {y} {width} {board} />
                             </div>
                         {/if}

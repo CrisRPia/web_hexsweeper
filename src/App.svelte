@@ -38,19 +38,19 @@
         <ProgressBar />
     </div>
 {:else}
-    <div transition:fade>
+    <div transition:fade|global>
         <Board board={$board} />
     </div>
     <div
-        in:fly={{ y: -10 }}
-        out:fly={{ y: -10 }}
+        in:fly|global={{ y: -10 }}
+        out:fly|global={{ y: -10 }}
         class="flex fixed rounded m-5 justify-between z-50"
     >
         <ProgressHex progress={$board.flags} total={$board.mines} />
     </div>
     {#if $board.correctFlags == $board.mines && $board.flags <= $board.mines}
         <div
-            transition:fade={{ duration: 500 }}
+            transition:fade|global={{ duration: 500 }}
             class="left-0 right-0 bottom-1/4 w-fit mx-auto select-none justify-center z-20 fixed"
         >
             <div class="card p-2 z-20">
@@ -71,7 +71,7 @@
     {/if}
     {#if $settings.touchscreen}
         <div
-            transition:fly
+            transition:fly|global
             class="fixed mx-auto rounded-full card bg-slate-500 left-0 right-0 bottom-0 mb-20 flex justify-between h-12 w-fit"
         >
             <div

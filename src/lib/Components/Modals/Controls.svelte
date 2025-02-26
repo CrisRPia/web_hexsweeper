@@ -58,7 +58,7 @@
         </label>
     </div>
     {#if !$settings.touchscreen}
-        <div class="table-container mb-5" in:fly={{ y: 10, duration: 500 }}>
+        <div class="table-container mb-5" in:fly|global={{ y: 10, duration: 500 }}>
             <table class="table table-hover variant-ringed">
                 <thead>
                     <tr class="variant-glass-secondary">
@@ -95,7 +95,7 @@
             </table>
         </div>
     {:else}
-        <div class="table-container mb-5" in:fly={{ y: 10, duration: 500 }}>
+        <div class="table-container mb-5" in:fly|global={{ y: 10, duration: 500 }}>
             <table class="table table-hover variant-ringed">
                 <thead>
                     <tr class="variant-glass-secondary">
