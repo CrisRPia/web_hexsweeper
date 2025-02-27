@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { popup, type PopupSettings } from "@skeletonlabs/skeleton";
+    import { Tooltip } from "@skeletonlabs/skeleton-svelte";
     import { Board as LogicBoard } from "$lib/types/Board";
     import { settings } from "$lib/stores/settings.svelte";
     import type { LogicCell } from "$lib/types/LogicCell";
@@ -9,11 +9,6 @@
     import Flag from "../UI/Flag.svelte";
     import Board from "../Board/Board.svelte";
 
-    const popupHover: PopupSettings = {
-        event: "hover",
-        target: "popupHover",
-        placement: "top"
-    };
     const mine = new LogicBoard(1, 1);
     mine.discover_animate(0, 0);
     const discovered = new LogicBoard(1, 0);
@@ -43,8 +38,7 @@
 </script>
 
 <div
-    class="p-2 m-2 card overflow-auto max-w-prose backdrop-hue-rotate-60 variant-glass"
-    style="max-height: calc(100% - 5rem);"
+    class="p-2 m-2 card max-w-prose backdrop-hue-rotate-60 variant-glass"
 >
     <h2 class="h1 mb-5 text-center">Cómo jugar</h2>
     <div class="flex justify-between items-center">
@@ -59,7 +53,10 @@
         </label>
     </div>
     {#if !settings.touchscreen}
-        <div class="table-container mb-5" in:fly|global={{ y: 10, duration: 500 }}>
+        <div
+            class="table-container mb-5"
+            in:fly|global={{ y: 10, duration: 500 }}
+        >
             <table class="table table-hover variant-ringed">
                 <thead>
                     <tr class="variant-glass-secondary">
@@ -72,11 +69,16 @@
                         <td>Click izquierdo</td>
                         <td
                             >Descubrir /
-                            <span
-                                use:popup={popupHover}
-                                class="variant-ghost-warning rounded p-1"
-                                >Expandir</span
-                            >
+                            <Tooltip>
+                                {#snippet trigger()}
+                                    <span
+                                        class="variant-ghost-warning rounded p-1"
+                                    >
+                                        Expandir
+                                    </span>
+                                {/snippet}
+                                {#snippet content()}This is a tooltip.{/snippet}
+                            </Tooltip>
                             celda</td
                         >
                     </tr>
@@ -96,7 +98,10 @@
             </table>
         </div>
     {:else}
-        <div class="table-container mb-5" in:fly|global={{ y: 10, duration: 500 }}>
+        <div
+            class="table-container mb-5"
+            in:fly|global={{ y: 10, duration: 500 }}
+        >
             <table class="table table-hover variant-ringed">
                 <thead>
                     <tr class="variant-glass-secondary">
@@ -117,16 +122,16 @@
                         >
                         <td>Celda con valor</td>
                         <td>
-                            <span
-                                use:popup={{
-                                    event: "hover",
-                                    target: "popupHover",
-                                    placement: "top"
-                                }}
-                                class="variant-ghost-warning rounded p-1"
-                                >Expandir</span
-                            >
-                            celda</td
+                            <Tooltip>
+                                {#snippet trigger()}
+                                    <span
+                                        class="variant-ghost-warning rounded p-1"
+                                        >Expandir</span
+                                    >
+                                {/snippet}
+                                {#snippet content()}This is a tooltip.{/snippet}
+                            </Tooltip>
+                            > celda</td
                         >
                     </tr>
                     <tr>

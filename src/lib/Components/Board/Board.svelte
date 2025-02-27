@@ -47,7 +47,7 @@
     bind:this={wrapper}
     class="
         {moveable
-        ? 'overflow-hidden fixed left-1/2 top-1/2 -translate-y-1/2 -z-1'
+        ? 'overflow-hidden absolute left-1/2 top-1/2 -translate-y-1/2 -z-1'
         : 'pl-5 pt-7 -mb-3 w-fit'}
     "
     style={moveable

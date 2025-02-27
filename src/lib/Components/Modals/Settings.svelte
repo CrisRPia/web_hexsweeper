@@ -1,20 +1,19 @@
 <script lang="ts">
-    import { createBubbler, stopPropagation } from 'svelte/legacy';
+    import { createBubbler, stopPropagation } from "svelte/legacy";
 
     const bubble = createBubbler();
     import {
         Accordion,
-        AccordionItem,
-        LightSwitch,
-        SlideToggle
-    } from "@skeletonlabs/skeleton";
+        Switch
+    } from "@skeletonlabs/skeleton-svelte";
     import { Board as LogicBoard } from "$lib/types/Board";
     import { main_board } from "$lib/stores/main_board.svelte";
     import { settings } from "$lib/stores/settings.svelte";
     import Board from "$lib/Components/Board/Board.svelte";
     import RegenerateButton from "$lib/Components/UI/RegenerateButton.svelte";
-    let difficulty =
-        $state($main_board.mines / ($main_board.size * $main_board.size) || 0.15);
+    let difficulty = $state(
+        $main_board.mines / ($main_board.size * $main_board.size) || 0.15
+    );
     let size = $state($main_board.size);
     let orthogonal = $state($main_board.orthogonalAdjacency);
     let diagonal = $state($main_board.diagonalAdjacency);
@@ -33,7 +32,7 @@
     <div class="card-header mb-5 flex justify-between items-center">
         <h2 class="h2">Opciones</h2>
         <div class="">
-            <LightSwitch />
+            TODO: LIGHTSWITCH
         </div>
     </div>
     <div class="overflow-y-auto">
@@ -54,159 +53,119 @@
                 </select>
             </div>
             <h3 class="h3">Mecánicas (WIP)</h3>
-            <Accordion>
-                <AccordionItem
-                    class={!diagonal && !orthogonal
-                        ? "variant-ghost-warning"
-                        : ""}
+            <Accordion
+                multiple
+                value={[]}
+            >
+                <Accordion.Item value="diagonalAdjacency">
+                    {#snippet lead()}
+                        <button onclick={stopPropagation(bubble("click"))}>
+                            <Switch
+                                bind:checked={diagonal}
+                                name="slider-diagonal"
+                                >Adyacencia diagonal</Switch
+                            >
+                        </button>
+                    {/snippet}
+                    {#snippet control()}
+                        <p></p>
+                    {/snippet}
+                    {#snippet panel()}
+                        Los valores de las celdas y las expansiones considerarán
+                        las celdas que comparten
+                        <span class="variant-ghost-secondary rounded"
+                            >vértices</span
+                        >
+                        como vecinas.
+                    {/snippet}
+                </Accordion.Item>
+                <Accordion.Item value="orthogonalAdjacency"
                 >
                     {#snippet lead()}
-                                    
-                            <div onclick={stopPropagation(bubble('click'))}>
-                                <SlideToggle
-                                    active="bg-success-500"
-                                    bind:checked={diagonal}
-                                    name="slider-diagonal"
-                                    >Adyacencia diagonal</SlideToggle
-                                >
-                            </div>
-                        
-                                    {/snippet}
-                    {#snippet summary()}
-                                    
-                            <p></p>
-                        
-                                    {/snippet}
-                    {#snippet content()}
-                                    
-                            Los valores de las celdas y las expansiones considerarán
-                            las celdas que comparten
-                            <span class="variant-ghost-secondary rounded"
-                                >vértices</span
+                        <button onclick={stopPropagation(bubble("click"))}>
+                            <Switch
+                                bind:checked={orthogonal}
+                                name="slider-orthogonal"
+                                >Adyacencia ortogonal</Switch
                             >
-                            como vecinas.
-                        
-                                    {/snippet}
-                </AccordionItem>
-                <AccordionItem
-                    class={!diagonal && !orthogonal
-                        ? "variant-ghost-warning"
-                        : ""}
-                >
+                        </button>
+                    {/snippet}
+                    {#snippet control()}
+                        <p></p>
+                    {/snippet}
+                    {#snippet panel()}
+                        Los valores de las celdas y las expansiones considerarán
+                        las celdas que comparten
+                        <span class="variant-ghost-secondary rounded"
+                            >lados</span
+                        >
+                        como vecinas.
+                    {/snippet}
+                </Accordion.Item>
+                <Accordion.Item value="generateUnknowns">
                     {#snippet lead()}
-                                    
-                            <div onclick={stopPropagation(bubble('click'))}>
-                                <SlideToggle
-                                    active="bg-success-500"
-                                    bind:checked={orthogonal}
-                                    name="slider-orthogonal"
-                                    >Adyacencia ortogonal</SlideToggle
-                                >
-                            </div>
-                        
-                                    {/snippet}
-                    {#snippet summary()}
-                                    
-                            <p></p>
-                        
-                                    {/snippet}
-                    {#snippet content()}
-                                    
-                            Los valores de las celdas y las expansiones considerarán
-                            las celdas que comparten
-                            <span class="variant-ghost-secondary rounded"
-                                >lados</span
+                        <button onclick={stopPropagation(bubble("click"))}>
+                            <Switch
+                                bind:checked={unknown}
+                                name="slider-unknown"
+                                >Generar incógnitas</Switch
                             >
-                            como vecinas.
-                        
-                                    {/snippet}
-                </AccordionItem>
-                <AccordionItem>
+                        </button>
+                    {/snippet}
+                    {#snippet control()}
+                        <p></p>
+                    {/snippet}
+                    {#snippet panel()}
+                        Generar algunas celdas sin minas carentes de
+                        información. La frecuencia de las mismas depende de la
+                        dificultad.
+                    {/snippet}
+                </Accordion.Item>
+                <Accordion.Item value="guaranteeWinnable">
                     {#snippet lead()}
-                                    
-                            <div onclick={stopPropagation(bubble('click'))}>
-                                <SlideToggle
-                                    bind:checked={unknown}
-                                    active="bg-success-500"
-                                    name="slider-unknown"
-                                    >Generar incógnitas</SlideToggle
-                                >
-                            </div>
-                        
-                                    {/snippet}
-                    {#snippet summary()}
-                                    
-                            <p></p>
-                        
-                                    {/snippet}
-                    {#snippet content()}
-                                    
-                            Generar algunas celdas sin minas carentes de
-                            información. La frecuencia de las mismas depende de la
-                            dificultad.
-                        
-                                    {/snippet}
-                </AccordionItem>
-                <AccordionItem>
+                        <button onclick={stopPropagation(bubble("click"))}>
+                            <Switch
+                                disabled
+                                name="slider-winnable"
+                                >Garantizar tablero ganable</Switch
+                            >
+                        </button>
+                    {/snippet}
+                    {#snippet control()}
+                        <p></p>
+                    {/snippet}
+                    {#snippet panel()}
+                        Al generar el tablero se revelan suficientes celdas para
+                        poder ganar sin tener que adivinar. Esta generación
+                        puede llevar un tiempo, dependiendo de la configuración
+                        y la suerte.
+                    {/snippet}
+                </Accordion.Item>
+                <Accordion.Item value="badExpansion">
                     {#snippet lead()}
-                                    
-                            <div onclick={stopPropagation(bubble('click'))}>
-                                <SlideToggle
-                                    disabled
-                                    active="bg-success-500"
-                                    name="slider-winnable"
-                                    >Garantizar tablero ganable</SlideToggle
-                                >
-                            </div>
-                        
-                                    {/snippet}
-                    {#snippet summary()}
-                                    
-                            <p></p>
-                        
-                                    {/snippet}
-                    {#snippet content()}
-                                    
-                            Al generar el tablero se revelan suficientes celdas para
-                            poder ganar sin tener que adivinar. Esta generación
-                            puede llevar un tiempo, dependiendo de la configuración
-                            y la suerte.
-                        
-                                    {/snippet}
-                </AccordionItem>
-                <AccordionItem>
-                    {#snippet lead()}
-                                    
-                            <div onclick={stopPropagation(bubble('click'))}>
-                                <SlideToggle
-                                    bind:checked={punish}
-                                    active="bg-success-500"
-                                    name="slider-penalize"
-                                    >Penalizar mala expansión</SlideToggle
-                                >
-                            </div>
-                        
-                                    {/snippet}
-                    {#snippet summary()}
-                                    
-                            <p></p>
-                        
-                                    {/snippet}
-                    {#snippet content()}
-                                    
-                            Al intentar expandir un hexágono inválido, la celda
-                            seleccionada se vuelve una incógnita.
-                        
-                                    {/snippet}
-                </AccordionItem>
+                        <button onclick={stopPropagation(bubble("click"))}>
+                            <Switch
+                                bind:checked={punish}
+                                name="slider-penalize"
+                                >Penalizar mala expansión</Switch
+                            >
+                        </button>
+                    {/snippet}
+                    {#snippet control()}
+                        <div></div>
+                    {/snippet}
+                    {#snippet panel()}
+                        Al intentar expandir un hexágono inválido, la celda
+                        seleccionada se vuelve una incógnita.
+                    {/snippet}
+                </Accordion.Item>
             </Accordion>
         </label>
     </div>
     <h3 class="h3">Misceláneo</h3>
-    <SlideToggle
-        bind:checked={$settings.touchscreen}
-        active="bg-success-500"
-        name="slider-penalize">Controles táctiles</SlideToggle
+    <Switch
+        bind:checked={settings.touchscreen}
+        name="slider-penalize">Controles táctiles</Switch
     >
     <h3 class="h3">Previsualización</h3>
     <div class="h-fit w-fit mx-auto">

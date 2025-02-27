@@ -1,15 +1,16 @@
 <script lang="ts">
     import { fade, fly } from "svelte/transition";
-    import { Modal, ProgressBar } from "@skeletonlabs/skeleton";
+    import { Modal, Progress } from "@skeletonlabs/skeleton-svelte";
     import { Board as LogicBoard } from "$lib/types/Board";
     import { main_board } from "$lib/stores/main_board.svelte";
-    import { openModal } from "$lib/stores/modals";
+    import { openModal } from "$lib/stores/modals.svelte";
     import Board from "$lib/Components/Board/Board.svelte";
     import ProgressHex from "$lib/Components/UI/ProgressHex.svelte";
     import RegenerateButton from "$lib/Components/UI/RegenerateButton.svelte";
     import { settings } from "$lib/stores/settings.svelte";
     import MagnifyingGlass from "$lib/Components/UI/MagnifyingGlass.svelte";
     import Flag from "$lib/Components/UI/Flag.svelte";
+    import Modals from "$lib/Components/Modals/Modals.svelte";
 
     $main_board = new LogicBoard(0, 0, true, true, 0);
     setTimeout(() => {
@@ -17,25 +18,27 @@
     }, 1000);
 </script>
 
+<Modals></Modals>
+
 <section
-    class="btn-group-vertical variant-glass rounded fixed right-0 m-5 z-10"
+    class="btn-group preset-outlined-surface-50-950 rounded fixed right-0 m-5 z-20"
 >
-    <button onclick={() => openModal("settings")}> Opciones </button>
-    <button onclick={() => openModal("controls")}> Cómo jugar </button>
+    <button class="btn preset-filled" onclick={() => openModal("settings")}> Opciones </button>
+    <button class="btn" onclick={() => openModal("controls")}> Cómo jugar </button>
 </section>
 
 {#if $main_board.size == 0}
     <div class="w-1/2 left-1/4 top-10 z-50 fixed my-auto">
-        <ProgressBar />
+        <Progress />
     </div>
 {:else}
-    <main transition:fade|global>
+    <main transition:fade class="z-10 relative h-full w-full">
         <Board board={$main_board} />
     </main>
     <var
         in:fly|global={{ y: -10 }}
         out:fly|global={{ y: -10 }}
-        class="flex fixed rounded m-5 justify-between z-50 not-italic"
+        class="flex fixed top-0 left-0 rounded m-5 justify-between z-50 not-italic"
     >
         <ProgressHex progress={$main_board.flags} total={$main_board.mines} />
     </var>
@@ -49,7 +52,7 @@
                 <RegenerateButton
                     size={$main_board.size}
                     mines={$main_board.mines}
-                    cls="m-1 btn variant-filled-primary rounded mt-1 w-fit"
+                    cls="m-1 btn preset-filled rounded mt-1 w-fit"
                 />
                 <button
                     class="m-1 btn variant-filled-tertiary rounded mt-1 w-fit"
