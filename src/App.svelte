@@ -2,7 +2,6 @@
     import { fade, fly } from "svelte/transition";
     import { Modal, Progress } from "@skeletonlabs/skeleton-svelte";
     import { Board as LogicBoard } from "$lib/types/Board";
-    import { main_board } from "$lib/stores/main_board.svelte";
     import { openModal } from "$lib/stores/modals.svelte";
     import Board from "$lib/Components/Board/Board.svelte";
     import ProgressHex from "$lib/Components/UI/ProgressHex.svelte";
@@ -12,9 +11,9 @@
     import Flag from "$lib/Components/UI/Flag.svelte";
     import Modals from "$lib/Components/Modals/Modals.svelte";
 
-    $main_board = new LogicBoard(0, 0, true, true, 0);
+    let main_board = $state(new LogicBoard(0, 0, true, true, 0));
     setTimeout(() => {
-        $main_board = new LogicBoard(10, 10, true, true, 0)
+        main_board = new LogicBoard(10, 10, true, true, 0)
     }, 1000);
 </script>
 
@@ -29,11 +28,11 @@
 
 {#if $main_board.size == 0}
     <div class="w-1/2 left-1/4 top-10 z-50 fixed my-auto">
-        <Progress />
+        <Progress value={null} />
     </div>
 {:else}
     <main transition:fade class="z-10 relative h-full w-full">
-        <Board board={$main_board} />
+        <Board board={main_board} />
     </main>
     <var
         in:fly|global={{ y: -10 }}

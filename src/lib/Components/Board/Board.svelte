@@ -1,11 +1,10 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
     import Cell from "./Cell.svelte";
-    import Panzoom from "@panzoom/panzoom";
-    import type { PanzoomObject } from "@panzoom/panzoom";
+    import Panzoom, { type PanzoomOptions } from "@panzoom/panzoom";
     import { Board } from "$lib/types/Board";
 
-    let wrapper: HTMLDivElement = $state();
+    let wrapper: HTMLDivElement | undefined = $state();
 
     interface Props {
         board: Board;
@@ -15,36 +14,46 @@
 
     let { board, moveable = true, width = 40 }: Props = $props();
 
-    let panzoomElement;
-    let panzoom: PanzoomObject = $state();
-
-    function initPanzoom(node: HTMLElement) {
-        if (!moveable) {
-            return;
+    let panzoomElement: HTMLDivElement | undefined = $state();
+    let panzoom = $derived.by(() => {
+        if (
+            wrapper === undefined ||
+            !moveable ||
+            panzoomElement === undefined
+        ) {
+            return undefined;
         }
-        panzoomElement = node;
-        panzoom = Panzoom(panzoomElement, {
+
+        console.log("HI");
+
+        const x = (wrapper.clientWidth - panzoomElement.clientWidth) / 2;
+        const y = (wrapper.clientHeight - panzoomElement.clientHeight) / 2;
+
+        const panzoom = Panzoom(panzoomElement, {
             maxScale: 5,
             minScale: 0.5,
             animate: true,
+            startX: x,
+            startY: y,
             roundPixels: false
-        });
+        } satisfies PanzoomOptions);
 
-        setTimeout(() =>
-            panzoom.pan(
-                (wrapper.clientWidth - node.clientWidth) / 2,
-                (wrapper.clientHeight - node.clientHeight) / 2,
-                {
-                    animate: false
-                }
-            )
-        );
-    }
+        setTimeout(() => {
+            panzoom.pan(x, y, {
+                duration: 500
+            });
+        })
+
+        return panzoom;
+    });
+
+    $inspect(panzoom);
 </script>
 
 <div
-    onwheel={panzoom.zoomWithWheel}
+    onwheel={panzoom?.zoomWithWheel}
     bind:this={wrapper}
+    bind:this={panzoomElement}
     class="
         {moveable
         ? 'overflow-hidden absolute left-1/2 top-1/2 -translate-y-1/2 -z-1'
@@ -54,11 +63,12 @@
         ? "width: 100vw; height: 100vh; left: 0px; position:absolute"
         : undefined}
 >
-    <div use:initPanzoom id="mover" class="w-fit h-fit">
+    <div bind:this={panzoomElement} id="mover" class="w-fit h-fit">
         <div
             class="relative overflow-visible whitespace-nowrap transition-transform w-fit h-fit"
         >
             {#each board.cells as row, x}
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div
                     oncontextmenu={(e) => {
                         e.preventDefault();

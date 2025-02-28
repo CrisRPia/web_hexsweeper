@@ -1,10 +1,7 @@
 <script lang="ts">
-
-    import { LogicCell } from "$lib/types/LogicCell";
     import { settings } from "$lib/stores/settings.svelte";
     import { Board } from "$lib/types/Board";
 
-    let logic: LogicCell = $state();
     interface Props {
         width?: number;
         x: number;
@@ -16,13 +13,11 @@
         width = 30,
         x,
         y,
-        board
+        board,
     }: Props = $props();
 
-    board.subscribe(() => {
-        logic = board.cells[x][y];
-    });
-
+    const logic = $derived(board.cells[x][y]);
+    $inspect(board);
     function discover() {
         if (logic.discovered) {
             board.expand(x, y);
@@ -39,6 +34,7 @@
     }
 
     function handleUp(e: MouseEvent) {
+        console.log(logic);
         if (settings.flag) {
             flagCell(e);
         } else {
@@ -60,7 +56,7 @@
         <div
             tabindex={x * 10 + y + 20}
             role="button"
-            onmouseup={handleUp}
+            onclick={handleUp}
             onkeypress={handleKey}
             oncontextmenu={flagCell}
             onfocus={() => board.hoverIn(x, y)}
@@ -81,8 +77,8 @@
                 : logic.mined && logic.discovered
                 ? 'bg-warning-500 dark:bg-error-500'
                 : logic.discovered
-                ? 'bg-tertiary-400 bg-opacity-30'
-                : 'bg-tertiary-400 bg-opacity-100'}
+                ? 'bg-slate-600 backdrop-opacity-30'
+                : 'bg-tertiary-400 backdrop-opacity-100'}
                 w-8
                 inline-block
                 transition-colors
