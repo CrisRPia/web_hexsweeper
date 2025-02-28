@@ -17,7 +17,6 @@
     }: Props = $props();
 
     const logic = $derived(board.cells[x][y]);
-    $inspect(board);
     function discover() {
         if (logic.discovered) {
             board.expand(x, y);

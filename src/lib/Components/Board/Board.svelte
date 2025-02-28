@@ -24,8 +24,6 @@
             return undefined;
         }
 
-        console.log("HI");
-
         const x = (wrapper.clientWidth - panzoomElement.clientWidth) / 2;
         const y = (wrapper.clientHeight - panzoomElement.clientHeight) / 2;
 
@@ -42,11 +40,14 @@
             panzoom.pan(x, y, {
                 duration: 500
             });
-        })
+        });
 
         return panzoom;
     });
 
+    let cellOffset = $derived(25 / board.size);
+
+    // TODO: remove inspect without breaking panzoom.
     $inspect(panzoom);
 </script>
 
@@ -56,12 +57,9 @@
     bind:this={panzoomElement}
     class="
         {moveable
-        ? 'overflow-hidden absolute left-1/2 top-1/2 -translate-y-1/2 -z-1'
+        ? 'overflow-hidden top-1/2 -translate-y-1/2 -z-1 h-screen w-screen left-0 absolute'
         : 'pl-5 pt-7 -mb-3 w-fit'}
     "
-    style={moveable
-        ? "width: 100vw; height: 100vh; left: 0px; position:absolute"
-        : undefined}
 >
     <div bind:this={panzoomElement} id="mover" class="w-fit h-fit">
         <div
@@ -77,8 +75,9 @@
                         line-height: 0;
                         vertical-align: top;
                         transform: translateX({x % 2 == 0
-                        ? (-50 / board.size).toString()
-                        : '0'}%);
+                            ? -cellOffset
+                            : cellOffset}%)
+                            translateY(calc(6/11 * 100%));
                     "
                 >
                     {#each row as _, y}

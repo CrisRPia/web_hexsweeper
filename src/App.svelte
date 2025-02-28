@@ -12,6 +12,7 @@
     import Modals from "$lib/Components/Modals/Modals.svelte";
 
     let main_board = $state(new LogicBoard(0, 0, true, true, 0));
+    $inspect(main_board);
     setTimeout(() => {
         main_board = new LogicBoard(10, 10, true, true, 0)
     }, 1000);
